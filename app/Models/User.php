@@ -50,4 +50,9 @@ class User extends Authenticatable
     ];
 
     protected $guard_name = 'api';
+
+    public function gravatar($size = 150)
+    {
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=mm&s=" . $size;
+    }
 }
