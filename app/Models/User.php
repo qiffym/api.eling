@@ -27,7 +27,8 @@ class User extends Authenticatable
         'avatar',
         'birthday',
         'religion',
-        'address'
+        'address',
+        'phone'
     ];
 
     /**
@@ -51,8 +52,30 @@ class User extends Authenticatable
 
     protected $guard_name = 'api';
 
+    ## Accessors & Mutators
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
+
+    ## Eloquent Relationship
     public function gravatar($size = 150)
     {
         return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=mm&s=" . $size;
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
+    }
+
+    public function family()
+    {
+        return $this->hasOne(Family::class);
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
     }
 }

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->dateTime('birthday')->nullable();
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])->nullable();
             $table->string('address')->nullable();
+            $table->string('telpon', '15')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamp('last_login')->nullable();
 

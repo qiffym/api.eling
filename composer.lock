@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c898a2a39fc932bbc12091807ae25b4b",
+    "content-hash": "b418567444547ea452324cb5b5e9071b",
     "packages": [
         {
             "name": "brick/math",
@@ -894,6 +894,70 @@
             "time": "2022-06-20T21:43:11+00:00"
         },
         {
+            "name": "kennedy-osaze/laravel-api-response",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kennedy-osaze/laravel-api-response.git",
+                "reference": "33911480642523f89a93e8e2ffdf3b42f8b4e7b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kennedy-osaze/laravel-api-response/zipball/33911480642523f89a93e8e2ffdf3b42f8b4e7b6",
+                "reference": "33911480642523f89a93e8e2ffdf3b42f8b4e7b6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.10",
+                "illuminate/http": "^9.10",
+                "illuminate/translation": "^9.10",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "kennedy-osaze/php-cs-fixer-config": "^2.0",
+                "nunomaduro/collision": "^6.2",
+                "orchestra/testbench": "^7.4",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KennedyOsaze\\LaravelApiResponse\\LaravelApiResponseServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KennedyOsaze\\LaravelApiResponse\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kennedy Osaze",
+                    "email": "me.osaze@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Renders consistent HTTP JSON responses for API-based projects",
+            "homepage": "https://github.com/kennedy-osaze/laravel-api-response",
+            "keywords": [
+                "api",
+                "json",
+                "laravel",
+                "response"
+            ],
+            "support": {
+                "issues": "https://github.com/kennedy-osaze/laravel-api-response/issues",
+                "source": "https://github.com/kennedy-osaze/laravel-api-response/tree/1.2.1"
+            },
+            "time": "2022-06-03T14:34:56+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v9.21.6",
             "source": {
@@ -1601,16 +1665,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.7.0",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "5579edf28aee1190a798bfa5be8bc16c563bd524"
+                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5579edf28aee1190a798bfa5be8bc16c563bd524",
-                "reference": "5579edf28aee1190a798bfa5be8bc16c563bd524",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/720488632c590286b88b80e62aa3d3d551ad4a50",
+                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50",
                 "shasum": ""
             },
             "require": {
@@ -1630,11 +1694,10 @@
                 "guzzlehttp/psr7": "^2.2",
                 "mongodb/mongodb": "^1.8",
                 "php-amqplib/php-amqplib": "~2.4 || ^3",
-                "php-console/php-console": "^3.1.3",
                 "phpspec/prophecy": "^1.15",
                 "phpstan/phpstan": "^0.12.91",
                 "phpunit/phpunit": "^8.5.14",
-                "predis/predis": "^1.1",
+                "predis/predis": "^1.1 || ^2.0",
                 "rollbar/rollbar": "^1.3 || ^2 || ^3",
                 "ruflin/elastica": "^7",
                 "swiftmailer/swiftmailer": "^5.3|^6.0",
@@ -1654,7 +1717,6 @@
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
@@ -1689,7 +1751,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.7.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.8.0"
             },
             "funding": [
                 {
@@ -1701,7 +1763,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-09T08:59:12+00:00"
+            "time": "2022-07-24T11:55:47+00:00"
         },
         {
             "name": "nesbot/carbon",
