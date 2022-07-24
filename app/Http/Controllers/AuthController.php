@@ -40,8 +40,11 @@ class AuthController extends Controller
         return $this->response(Auth::user());
     }
 
+
     public function logout()
     {
+        /** @var \App\Models\User $user **/
+
         $user = Auth::user();
         \App\Models\User::where('id', $user->id)->update(['last_login' => now()]);
         $user->tokens()->delete();

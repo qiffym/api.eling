@@ -21,10 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $auth = auth()->user();
-        if (!$auth->tokenCan('role:admin')) {
-            return $this->forbiddenResponse('Forbidden.');
-        }
+        $this->checkTokenAbility();
 
         $users = User::latest()->get();
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users));
@@ -38,6 +35,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->checkTokenAbility();
+
         try {
             $input = $request->validate([
                 'name' => 'required|max:255',
@@ -96,6 +95,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->checkTokenAbility();
         //
     }
 
@@ -107,6 +107,17 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->checkTokenAbility();
         //
+    }
+
+    public function checkTokenAbility()
+    {
+        /** @var \App\Models\User $auth **/
+
+        $auth = auth()->user();
+        if (!$auth->tokenCan('role:admin')) {
+            return $this->forbiddenResponse('Forbidden.');
+        }
     }
 }
