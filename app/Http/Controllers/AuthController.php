@@ -8,6 +8,35 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function login(Request $request)
+    {
+        $cred = $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (!Auth::attempt([$fieldType => $cred['username'], 'password' => $cred['password']])) {
+            return $this->unauthenticatedResponse('Username atau Password Anda Salah.');
+        }
+
+        return $this->response(Auth::user());
+    }
+
+    public function logout()
+    {
+        /** @var \App\Models\User $user **/
+
+        $user = Auth::user();
+        \App\Models\User::where('id', $user->id)->update(['last_login' => now()]);
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'You have successfully logged out'
+        ]);
+    }
+
     public function response($user)
     {
         if ($user->hasRole('admin')) {
@@ -22,35 +51,6 @@ class AuthController extends Controller
             $token = $user->createToken('e-learning', ['role:student'])->plainTextToken;
         }
 
-        return response()->json(['user' => new AuthResource($user), 'token' => $token]);
-    }
-    public function login(Request $request)
-    {
-        $cred = $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ]);
-
-        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (!Auth::attempt([$fieldType => $cred['username'], 'password' => $cred['password']])) {
-            return response()->json(['message' => 'Unauthorized.'], 401);
-        }
-
-        return $this->response(Auth::user());
-    }
-
-
-    public function logout()
-    {
-        /** @var \App\Models\User $user **/
-
-        $user = Auth::user();
-        \App\Models\User::where('id', $user->id)->update(['last_login' => now()]);
-        $user->tokens()->delete();
-
-        return response()->json([
-            'message' => 'You have successfully logged out'
-        ]);
+        return $this->okResponse('You have successfully logged in', ['user' => new AuthResource($user), 'token' => $token]);
     }
 }

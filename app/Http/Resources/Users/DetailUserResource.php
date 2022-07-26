@@ -18,7 +18,6 @@ class DetailUserResource extends JsonResource
         if ($this->hasRole(2)) {
             return [
                 'id' => $this->id,
-                'avatar' => $this->avatar ?? $this->gravatar(),
                 'name' => $this->name,
                 'gender' => $this->gender,
                 'username' => $this->username,
@@ -26,9 +25,9 @@ class DetailUserResource extends JsonResource
                 'verified' => ($this->email_verified_at) ? true : false,
                 'religion' => $this->religion,
                 'address' => $this->address,
-                'role' => [
-                    'name' => $this->getRoleNames()->first(),
-                ],
+                'status' => $this->status,
+                'role' => $this->getRoleNames()->first(),
+                'avatar' => $this->avatar ?? $this->gravatar(),
             ];
         }
 
@@ -36,7 +35,6 @@ class DetailUserResource extends JsonResource
         if ($this->hasRole(3)) {
             return [
                 'id' => $this->id,
-                'avatar' => $this->avatar ?? $this->gravatar(),
                 'name' => $this->name,
                 'gender' => $this->gender,
                 'username' => $this->username,
@@ -44,11 +42,11 @@ class DetailUserResource extends JsonResource
                 'verified' => ($this->email_verified_at) ? true : false,
                 'religion' => $this->religion,
                 'address' => $this->address,
-                'role' => [
-                    'name' => $this->getRoleNames()->first(),
-                    'nik' => $this->teacher->nik,
-                    'nik' => $this->teacher->nip,
-                ],
+                'status' => $this->status,
+                'role' => $this->getRoleNames()->first(),
+                'nik' => $this->teacher->nik,
+                'nip' => $this->teacher->nip,
+                'avatar' => $this->avatar ?? $this->gravatar(),
             ];
         }
 
@@ -56,7 +54,6 @@ class DetailUserResource extends JsonResource
         if ($this->hasRole(4)) {
             return [
                 'id' => $this->id,
-                'avatar' => $this->avatar ?? $this->gravatar(),
                 'name' => $this->name,
                 'gender' => $this->gender,
                 'username' => $this->username,
@@ -64,9 +61,9 @@ class DetailUserResource extends JsonResource
                 'verified' => ($this->email_verified_at) ? true : false,
                 'religion' => $this->religion,
                 'address' => $this->address,
-                'role' => [
-                    'name' => $this->getRoleNames()->first(),
-                ],
+                'status' => $this->status,
+                'role' => $this->getRoleNames()->first(),
+                'avatar' => $this->avatar ?? $this->gravatar(),
             ];
         }
 
@@ -74,7 +71,6 @@ class DetailUserResource extends JsonResource
         if ($this->hasRole(5)) {
             return [
                 'id' => $this->id,
-                'avatar' => $this->avatar ?? $this->gravatar(),
                 'name' => $this->name,
                 'gender' => $this->gender,
                 'username' => $this->username,
@@ -82,14 +78,14 @@ class DetailUserResource extends JsonResource
                 'verified' => ($this->email_verified_at) ? true : false,
                 'religion' => $this->religion,
                 'address' => $this->address,
-                'role' => [
-                    'name' => $this->getRoleNames()->first(),
-                    'nis' => $this->student->nis,
-                    'nisn' => $this->student->nisn,
-                ],
+                'status' => $this->status,
+                'role' => $this->getRoleNames()->first(),
+                'nis' => $this->student->nis,
+                'nisn' => $this->student->nisn,
                 'family' => [
                     'name' => $this->student->family->user->name ?? null,
-                ]
+                ],
+                'avatar' => $this->avatar ?? $this->gravatar(),
             ];
         }
     }
