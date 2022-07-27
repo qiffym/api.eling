@@ -26,6 +26,7 @@ class RedirectIfAuthenticated
                 if ($request->expectsJson()) {
                     return response()->json(['error' => 'You are already authenticated'], 200);
                 }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

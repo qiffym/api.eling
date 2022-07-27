@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Resources\Users\DetailUserResource;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,10 @@ Route::middleware('auth:sanctum')->group(fn () => [
     Route::get('/me', fn () => new DetailUserResource(Auth::user())),
 
     // Profile
-    Route::resource('profile', ProfileController::class),
+    Route::get('profile/{user}', [ProfileController::class, 'show']),
+    Route::match(['put', 'patch'], 'profile/{user}', [ProfileController::class, 'update']),
+    Route::patch('profile/update-password/{user}', [ProfileController::class, 'updatePassword']),
+    Route::patch('profile/update-avatar/{user}', [ProfileController::class, 'updateAvatar']),
 
     // Role Admin
     Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [

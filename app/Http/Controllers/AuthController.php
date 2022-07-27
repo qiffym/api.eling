@@ -10,15 +10,15 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $cred = $request->validate([
+        $creds = $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (!Auth::attempt([$fieldType => $cred['username'], 'password' => $cred['password']])) {
-            return $this->unauthenticatedResponse('Username atau Password Anda Salah.');
+        if (! Auth::attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
+            return $this->unauthenticatedResponse('The provided credentials do not match our records.');
         }
 
         return $this->response(Auth::user());
@@ -26,14 +26,13 @@ class AuthController extends Controller
 
     public function logout()
     {
-        /** @var \App\Models\User $user **/
-
+        /** @var \App\Models\User $user * */
         $user = Auth::user();
         \App\Models\User::where('id', $user->id)->update(['last_login' => now()]);
         $user->tokens()->delete();
 
         return response()->json([
-            'message' => 'You have successfully logged out'
+            'message' => 'You have successfully logged out',
         ]);
     }
 

@@ -5,9 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -28,7 +28,9 @@ class User extends Authenticatable
         'birthday',
         'religion',
         'address',
-        'phone'
+        'telpon',
+        'status',
+        'last_login',
     ];
 
     /**
@@ -52,16 +54,16 @@ class User extends Authenticatable
 
     protected $guard_name = 'api';
 
-    ## Accessors & Mutators
+    //# Accessors & Mutators
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
     }
 
-    ## Eloquent Relationship
+    //# Eloquent Relationship
     public function gravatar($size = 150)
     {
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->email))) . "?d=mm&s=" . $size;
+        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?d=mm&s='.$size;
     }
 
     public function teacher()
