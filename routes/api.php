@@ -27,10 +27,10 @@ Route::middleware('auth:sanctum')->group(fn () => [
     Route::get('/me', fn () => new DetailUserResource(Auth::user())),
 
     // Profile
-    Route::get('profile/{user}', [ProfileController::class, 'show']),
-    Route::match(['put', 'patch'], 'profile/{user}', [ProfileController::class, 'update']),
     Route::patch('profile/update-password/{user}', [ProfileController::class, 'updatePassword']),
     Route::patch('profile/update-avatar/{user}', [ProfileController::class, 'updateAvatar']),
+    Route::match(['put', 'patch'], 'profile/{user}', [ProfileController::class, 'update']),
+    Route::get('profile/{user}', [ProfileController::class, 'show']),
 
     // Role Admin
     Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [
