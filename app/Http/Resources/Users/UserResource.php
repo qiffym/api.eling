@@ -17,7 +17,7 @@ class UserResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'avatar' => $this->avatar ?? $this->gravatar(),
+            'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : $this->gravatar(),
             'name' => $this->name,
             'role' => $this->getRoleNames()->first(),
             'username' => $this->username,

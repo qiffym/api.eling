@@ -26,8 +26,8 @@ class UpdateProfileRequest extends FormRequest
         return [
             'role' => 'required|in:2,3,4,5',
             'name' => 'required|string',
-            'username' => 'required|string|min:3|unique:users,username,' . $this->id,
-            'email' => 'nullable|email:rfc,dns|unique:users,email,' . $this->id,
+            'username' => 'required|string|min:3|unique:users,username,'.$this->id,
+            'email' => 'nullable|email:rfc,dns|unique:users,email,'.$this->id,
             'gender' => 'nullable|in:L,P',
             'birthday' => 'nullable|date',
             'religion' => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',

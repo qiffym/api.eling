@@ -27,7 +27,7 @@ class DetailUserResource extends JsonResource
                 'address' => $this->address,
                 'status' => $this->status,
                 'role' => $this->getRoleNames()->first(),
-                'avatar' => $this->avatar ?? $this->gravatar(),
+                'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : $this->gravatar(),
             ];
         }
 
@@ -46,7 +46,7 @@ class DetailUserResource extends JsonResource
                 'role' => $this->getRoleNames()->first(),
                 'nik' => $this->teacher->nik,
                 'nip' => $this->teacher->nip,
-                'avatar' => $this->avatar ?? $this->gravatar(),
+                'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : $this->gravatar(),
             ];
         }
 
@@ -63,7 +63,8 @@ class DetailUserResource extends JsonResource
                 'address' => $this->address,
                 'status' => $this->status,
                 'role' => $this->getRoleNames()->first(),
-                'avatar' => $this->avatar ?? $this->gravatar(),
+                'student' => $this->family->students,
+                'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : $this->gravatar(),
             ];
         }
 
@@ -85,7 +86,7 @@ class DetailUserResource extends JsonResource
                 'family' => [
                     'name' => $this->student->family->user->name ?? null,
                 ],
-                'avatar' => $this->avatar ?? $this->gravatar(),
+                'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : $this->gravatar(),
             ];
         }
     }

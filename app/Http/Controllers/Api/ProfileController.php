@@ -52,7 +52,7 @@ class ProfileController extends Controller
                 'religion' => $request->religion,
                 'address' => $request->address,
                 'telpon' => $request->telpon,
-                'status' => 1
+                'status' => 1,
             ]);
 
             // update spesific role
@@ -71,41 +71,49 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request, $id)
     {
-        $request->validate([
-            'password' => 'required|current_password',
-            'new_password' => 'required_with:password|confirmed'
-        ]);
+        try {
+            $request->validate([
+                'password' => 'required|current_password',
+                'new_password' => 'required_with:password|confirmed',
+            ]);
 
-        $user = User::find($id);
-        $user->password = $request->new_password;
-        $user->save();
+            $user = User::find($id);
+            $user->password = $request->new_password;
+            $user->save();
 
-        return $this->successResponse('Your password has been updated successfully');
+            // logout
+            User::where('id', $user->id)->update(['last_login' => now()]);
+            $user->tokens()->delete();
+
+            return $this->successResponse('Your password has been updated successfully, please login again with your new password');
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
+        }
     }
 
     public function updateAvatar(Request $request, $id)
     {
-        $request->validate([
-            'avatar' => 'required|mimes:jpg,bmp,png|image|max:5120'
-        ]);
+        try {
+            $request->validate([
+                'avatar' => 'required|mimes:jpg,bmp,png|image|max:5120',
+            ]);
 
-        $user = User::find($id);
+            $user = User::find($id);
 
-        // store image
-        if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->storeAs('avatars', now() . '-' . $user->name . '.' . $request->file('avatar')->extension());
-        } else {
-            $path = '';
+            // store image
+            $path = $request->file('avatar')->storeAs('avatars', time().'-'.str($user->name)->slug().'.'.$request->file('avatar')->extension());
+
+            // cek & delete current avatar
+            if ($user->avatar != null) {
+                Storage::delete($user->avatar);
+            }
+
+            $user->avatar = $path;
+            $user->save();
+
+            return $this->successResponse('Your avatar has been updated successfully');
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
-
-        // cek & delete current avatar
-        if ($user->avatar != null) {
-            Storage::delete($user->avatar);
-        }
-
-        $user->avatar = $path;
-        $user->save();
-
-        return $this->successResponse('Your avatar has been updated successfully');
     }
 }
