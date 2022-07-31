@@ -11,6 +11,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -90,7 +91,7 @@ class UserController extends Controller
                 'name' => 'required|string',
                 'role' => 'required|in:1,2,3,4,5',
                 'username' => 'required|string|min:3|unique:users,username,' . $id,
-                'email' => 'nullable|email:rfc,dns,' . $id,
+                'email' => 'nullable|email:rfc,dns|unique:users,email,' . $id,
                 'gender' => 'in:L,P|nullable',
                 'birthday' => 'date|nullable',
                 'religion' => 'in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu|nullable',
@@ -131,7 +132,7 @@ class UserController extends Controller
             //# sync role
             $user->first()->syncRoles($request->role);
 
-            return $this->acceptedResponse('User has been updated successfully');
+            return $this->successResponse('User has been updated successfully');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
@@ -146,8 +147,14 @@ class UserController extends Controller
     public function destroy($id)
     {
         $this->checkTokenAbility();
-        User::find($id)->delete();
 
+        $user = User::find($id);
+        // cek & delete current avatar
+        if ($user->avatar != null) {
+            Storage::delete($user->avatar);
+        }
+
+        $user->delete();
         return $this->successResponse('User has been deleted successfully');
     }
 
