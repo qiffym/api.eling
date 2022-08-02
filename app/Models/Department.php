@@ -15,4 +15,9 @@ class Department extends Model
      * @var array
      */
     protected $guarded = ['id'];
+
+    public function classes()
+    {
+        return $this->hasMany(RombelClass::class);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\AuthController;
@@ -36,7 +37,8 @@ Route::middleware('auth:sanctum')->group(fn () => [
 
     // Role Admin
     Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [
-        Route::resource('resources/users', UserController::class),
+        Route::apiResource('resources/users', UserController::class),
+        Route::apiResource('resources/rombel-classes', RombelClassController::class),
     ]),
 
     // Role Teacher

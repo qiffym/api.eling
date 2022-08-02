@@ -32,4 +32,9 @@ class Student extends Model
     {
         return $this->belongsTo(Family::class);
     }
+
+    public function rombel_class()
+    {
+        return $this->belongsTo(RombelClass::class);
+    }
 }

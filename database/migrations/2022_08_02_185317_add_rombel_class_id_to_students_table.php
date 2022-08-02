@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subjects', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('rombel_class_id');
-            $table->string('name');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('students', function (Blueprint $table) {
+            $table->foreignId('rombel_class_id')->after('nisn')->nullable()->constrained()->nullOnDelete();
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('rombel_class_id');
+        });
     }
 };
