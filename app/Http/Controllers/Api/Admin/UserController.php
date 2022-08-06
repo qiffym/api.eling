@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $this->checkTokenAbility();
 
-        $users = User::latest()->get();
+        $users = User::latest()->paginate(20);
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users));
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\MotivationalWordController;
 use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
@@ -39,6 +40,7 @@ Route::middleware('auth:sanctum')->group(fn () => [
     Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [
         Route::apiResource('resources/users', UserController::class),
         Route::apiResource('resources/rombel-classes', RombelClassController::class),
+        Route::apiResource('resources/motivational-words', MotivationalWordController::class),
     ]),
 
     // Role Teacher
