@@ -30,8 +30,8 @@ class DetailOnlineClassResource extends JsonResource
             ],
             'students' => [
                 'total' => $this->students->count(),
-                'data' => StudentResource::collection($this->students()->orderBy('pivot_created_at', 'desc')->get())
-            ]
+                'data' => StudentResource::collection($this->students()->orderBy('pivot_created_at', 'desc')->get()),
+            ],
         ];
     }
 }

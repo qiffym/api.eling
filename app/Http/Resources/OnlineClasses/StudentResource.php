@@ -22,7 +22,7 @@ class StudentResource extends JsonResource
             'email' => $this->user->email,
             'nis' => $this->nis,
             'nisn' => $this->nisn,
-            'join_at' => $this->pivot->created_at->diffForHumans()
+            'join_at' => $this->pivot->created_at->diffForHumans(),
         ];
     }
 }

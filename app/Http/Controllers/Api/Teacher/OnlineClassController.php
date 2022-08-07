@@ -29,7 +29,7 @@ class OnlineClassController extends Controller
             'teacher_id' => $oc->teacher_id,
             'teacher_name' => $oc->teacher->user->name,
             'created_at' => $oc->created_at->isoFormat('dddd, D MMMM Y'),
-            'updated_at' => $oc->updated_at->diffForHumans()
+            'updated_at' => $oc->updated_at->diffForHumans(),
         ]);
 
         return $this->okResponse('Your online class retrieved successfully', $data);
@@ -47,7 +47,7 @@ class OnlineClassController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'description' => 'nullable',
-                'rombel_class_id' => 'required|exists:rombel_classes,id'
+                'rombel_class_id' => 'required|exists:rombel_classes,id',
             ]);
 
             // add new online class
@@ -55,13 +55,13 @@ class OnlineClassController extends Controller
                 'teacher_id' => $request->user()->teacher->id,
                 'name' => $request->name,
                 'desc' => $request->description,
-                'rombel_class_id' => $request->rombel_class_id
+                'rombel_class_id' => $request->rombel_class_id,
             ]);
 
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (!is_null($rombel->students)) {
+            if (! is_null($rombel->students)) {
                 $oc = OnlineClass::find($new->id);
                 $oc->students()->sync($rombel->students->pluck('id'));
             }
@@ -82,11 +82,11 @@ class OnlineClassController extends Controller
     {
         try {
             $oc = OnlineClass::where('teacher_id', auth()->user()->teacher->id)->where('id', $id)->first();
-            $message = "Detail online class named $oc->name for " . $oc->rombel_class->name . " retrieved successfully";
+            $message = "Detail online class named $oc->name for ".$oc->rombel_class->name.' retrieved successfully';
 
             return $this->okResponse($message, new DetailOnlineClassResource($oc));
         } catch (\Throwable $th) {
-            return $this->forbiddenResponse("You cannot see online class that created by other teachers");
+            return $this->forbiddenResponse('You cannot see online class that created by other teachers');
         }
     }
 
@@ -103,25 +103,25 @@ class OnlineClassController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'description' => 'nullable',
-                'rombel_class_id' => 'required|exists:rombel_classes,id'
+                'rombel_class_id' => 'required|exists:rombel_classes,id',
             ]);
 
             // add new online class
-            $new = OnlineClass::updateOrCreate(['id' => $id, 'teacher_id' => $request->user()->teacher->id,], [
+            $new = OnlineClass::updateOrCreate(['id' => $id, 'teacher_id' => $request->user()->teacher->id], [
                 'name' => $request->name,
                 'desc' => $request->description,
-                'rombel_class_id' => $request->rombel_class_id
+                'rombel_class_id' => $request->rombel_class_id,
             ]);
 
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (!is_null($rombel->students)) {
+            if (! is_null($rombel->students)) {
                 $oc = OnlineClass::find($new->id);
                 $oc->students()->sync($rombel->students->pluck('id'));
             }
 
-            return $this->acceptedResponse("online class updated successfully");
+            return $this->acceptedResponse('online class updated successfully');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
         }
@@ -139,9 +139,10 @@ class OnlineClassController extends Controller
             $oc = OnlineClass::where('teacher_id', auth()->user()->teacher->id)->where('id', $id)->first();
             $oc_name = $oc->name;
             $oc->delete();
+
             return $this->okResponse("Online class named $oc_name deleted successfully");
         } catch (\Throwable $th) {
-            return $this->forbiddenResponse("You cannot delete online class that created by other teachers");
+            return $this->forbiddenResponse('You cannot delete online class that created by other teachers');
         }
     }
 }

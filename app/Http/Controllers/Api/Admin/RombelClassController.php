@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\RombelClasses\RombelClassResource;
 use App\Http\Resources\RombelClasses\DetailRombelClassResource;
+use App\Http\Resources\RombelClasses\RombelClassResource;
 use App\Models\RombelClass;
 use Illuminate\Http\Request;
 
@@ -20,6 +20,7 @@ class RombelClassController extends Controller
         $this->checkRole();
 
         $rombel_classes = RombelClass::all();
+
         return $this->successResponse('Rombel classes retrieved successfully', RombelClassResource::collection($rombel_classes));
     }
 
@@ -37,10 +38,11 @@ class RombelClassController extends Controller
             $validatedData = $request->validate([
                 'department_id' => 'required|exists:departments,id',
                 'name' => 'required|unique:rombel_classes,name',
-                'grade' => 'required|in:10,11,12'
+                'grade' => 'required|in:10,11,12',
             ]);
 
             $rombel_class = RombelClass::create($validatedData);
+
             return $this->acceptedResponse('New Rombel Class has been created successfully', $rombel_class);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
@@ -57,6 +59,7 @@ class RombelClassController extends Controller
     {
         try {
             $rombel_class = RombelClass::find($id);
+
             return $this->successResponse('Detail rombel class retrieved successfully', new DetailRombelClassResource($rombel_class));
         } catch (\Throwable $th) {
             return $this->notFoundResponse('Not Found', ['message' => $th->getMessage()]);
@@ -77,8 +80,8 @@ class RombelClassController extends Controller
         try {
             $request->validate([
                 'department_id' => 'required|exists:departments,id',
-                'name' => 'required|unique:rombel_classes,name,' . $id,
-                'grade' => 'required|in:10,11,12'
+                'name' => 'required|unique:rombel_classes,name,'.$id,
+                'grade' => 'required|in:10,11,12',
             ]);
 
             $rombel_class = RombelClass::find($id);
@@ -87,6 +90,7 @@ class RombelClassController extends Controller
             $rombel_class->name = $request->name;
             $rombel_class->grade = $request->grade;
             $rombel_class->save();
+
             return $this->acceptedResponse("Data $rombel_class->name has been updated successfully", $rombel_class);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
@@ -105,6 +109,7 @@ class RombelClassController extends Controller
         $getName = RombelClass::find($id)->name;
 
         RombelClass::find($id)->delete();
+
         return $this->successResponse("$getName has been deleted successfully");
     }
 
@@ -112,7 +117,7 @@ class RombelClassController extends Controller
     {
         /** @var \App\Models\User $auth * */
         $auth = auth()->user();
-        if (!$auth->hasRole('admin')) {
+        if (! $auth->hasRole('admin')) {
             return $this->forbiddenResponse('Forbidden.');
         }
     }

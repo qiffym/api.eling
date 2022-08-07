@@ -20,7 +20,7 @@ class MotivationalWordResource extends JsonResource
             'body' => strip_tags($this->body),
             'from' => str($this->from)->title() ?? '',
             'active' => ($this->active == 1) ? true : false,
-            'created_at' => $this->created_at->isoFormat('dddd, D MMMM Y')
+            'created_at' => $this->created_at->isoFormat('dddd, D MMMM Y'),
         ];
     }
 }

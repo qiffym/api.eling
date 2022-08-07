@@ -18,6 +18,7 @@ class MotivationalWordController extends Controller
     {
         $this->checkRole();
         $motivational_words = MotivationalWord::latest()->paginate(20);
+
         return $this->successResponse('Motivational words retrieved successfully', MotivationalWordResource::collection($motivational_words));
     }
 
@@ -36,10 +37,11 @@ class MotivationalWordController extends Controller
                 'title' => 'nullable|string',
                 'body' => 'required',
                 'from' => 'nullable|string',
-                'active' => 'required|boolean'
+                'active' => 'required|boolean',
             ]);
 
             $new = MotivationalWord::create($validatedData);
+
             return $this->acceptedResponse('New motivational word created successfully', new MotivationalWordResource($new));
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
@@ -56,6 +58,7 @@ class MotivationalWordController extends Controller
     {
         try {
             $motivational_word = MotivationalWord::find($id);
+
             return $this->successResponse('Motivational word retrieved successfully', new MotivationalWordResource($motivational_word));
         } catch (\Throwable $th) {
             return $this->notFoundResponse('Not Found.', ['message' => $th->getMessage()]);
@@ -78,10 +81,11 @@ class MotivationalWordController extends Controller
                 'title' => 'nullable|string',
                 'body' => 'required',
                 'from' => 'nullable|string',
-                'active' => 'required|boolean'
+                'active' => 'required|boolean',
             ]);
 
             MotivationalWord::where('id', $id)->update($validatedData);
+
             return $this->acceptedResponse('Motivational word updated successfully', new MotivationalWordResource(MotivationalWord::find($id)));
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);
@@ -98,6 +102,7 @@ class MotivationalWordController extends Controller
     {
         $this->checkRole();
         MotivationalWord::find($id)->delete();
+
         return $this->successResponse('Motivational word deleted successfully');
     }
 
@@ -105,7 +110,7 @@ class MotivationalWordController extends Controller
     {
         /** @var \App\Models\User $auth * */
         $auth = auth()->user();
-        if (!$auth->hasRole('admin')) {
+        if (! $auth->hasRole('admin')) {
             return $this->forbiddenResponse('Forbidden.');
         }
     }
