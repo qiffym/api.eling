@@ -25,4 +25,9 @@ class RombelClass extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    public function online_classes()
+    {
+        return $this->hasMany(OnlineClass::class);
+    }
 }

@@ -37,4 +37,9 @@ class Student extends Model
     {
         return $this->belongsTo(RombelClass::class);
     }
+
+    public function online_classes()
+    {
+        return $this->belongsToMany(OnlineClass::class, 'enrollment')->withTimestamps();
+    }
 }

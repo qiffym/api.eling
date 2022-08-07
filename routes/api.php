@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\MotivationalWordController;
 use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\Teacher\OnlineClassController;
 use App\Http\Controllers\AuthController;
 use App\Http\Resources\Users\DetailUserResource;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,10 @@ Route::middleware('auth:sanctum')->group(fn () => [
     ]),
 
     // Role Teacher
-    Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => []),
+    Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => [
+        Route::apiResource('online-class', OnlineClassController::class),
+        // Route::controller(OnlineClassContentController::class)->group(fn () => []),
+    ]),
 
     // Role Family
     Route::middleware('auth:sanctum', 'ability:role:family')->prefix('family')->group(fn () => []),
