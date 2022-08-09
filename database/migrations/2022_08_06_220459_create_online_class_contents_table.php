@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('online_class_contents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('online_class_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->text('desc')->nullable();
             $table->timestamps();
         });
     }

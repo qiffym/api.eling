@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             'username' => 'qiffym',
             'email' => 'qiww.dev@gmail.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('12345'),
+            'password' => '12345',
             'remember_token' => Str::random(10),
         ]);
         $admin->assignRole('admin');
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             'username' => 'gurua',
             'email' => 'gurua@email.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('12345'),
+            'password' => '12345',
             'remember_token' => Str::random(10),
         ]);
         $teacher->assignRole('teacher');
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
             'username' => 'ortua',
             'email' => 'ortua@email.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('12345'),
+            'password' => '12345',
             'remember_token' => Str::random(10),
         ]);
         $family->assignRole('family');
@@ -59,10 +59,10 @@ class UserSeeder extends Seeder
             'username' => 'siswaa',
             'email' => 'siswaa@email.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('12345'),
+            'password' => '12345',
             'remember_token' => Str::random(10),
         ]);
         $student->assignRole('student');
-        Student::create(['user_id' => $student->id, 'family_id' => 1]);
+        Student::create(['user_id' => $student->id, 'family_id' => 1, 'rombel_class_id' => 1]);
     }
 }

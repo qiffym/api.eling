@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\MotivationalWordController;
 use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\Teacher\OnlineClassContentController;
 use App\Http\Controllers\Api\Teacher\OnlineClassController;
 use App\Http\Controllers\AuthController;
 use App\Http\Resources\Users\DetailUserResource;
@@ -24,8 +25,12 @@ use Illuminate\Support\Facades\Route;
 // Guest routes
 Route::post('login', [AuthController::class, 'login']);
 
+// Fallback
+Route::fallback(fn () => response()->json('Not Found.', 404));
+
 // Auth routes
 Route::middleware('auth:sanctum')->group(fn () => [
+
     // Me
     Route::get('/me', fn () => new DetailUserResource(Auth::user())),
 
@@ -46,8 +51,8 @@ Route::middleware('auth:sanctum')->group(fn () => [
 
     // Role Teacher
     Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => [
-        Route::apiResource('online-class', OnlineClassController::class),
-        // Route::controller(OnlineClassContentController::class)->group(fn () => []),
+        Route::apiResource('online-classes', OnlineClassController::class),
+        Route::apiResource('online-classes/{online_class}/contents', OnlineClassContentController::class),
     ]),
 
     // Role Family
