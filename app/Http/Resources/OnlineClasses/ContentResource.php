@@ -22,7 +22,7 @@ class ContentResource extends JsonResource
             'description' => $this->desc,
             'created_at' => $this->created_at->isoFormat('dddd, D MMMM Y'),
             'updated_at' => $this->updated_at->diffForHumans(),
-            'materials' => $this->materials
+            'materials' => $this->materials,
         ];
     }
 }

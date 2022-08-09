@@ -29,9 +29,9 @@ class OnlineClassContentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => "All contents retrieved successfully",
-                'online_class_name' => "$oc->name (" . $oc->rombel_class->name . ")",
-                'data' => $data
+                'message' => 'All contents retrieved successfully',
+                'online_class_name' => "$oc->name (".$oc->rombel_class->name.')',
+                'data' => $data,
             ], 200);
         } catch (\Throwable $th) {
             return $this->notFoundResponse('Not Found.');
@@ -74,6 +74,7 @@ class OnlineClassContentController extends Controller
     {
         try {
             $content = OnlineClassContent::where('online_class_id', $online_class)->where('id', $id)->first();
+
             return $this->okResponse('Detail content retrieved successfully', new ContentResource($content));
         } catch (\Throwable $th) {
             return $this->notFoundResponse('Not Found.');
@@ -115,6 +116,8 @@ class OnlineClassContentController extends Controller
     public function destroy($online_class, $id)
     {
         $content = OnlineClassContent::where('online_class_id', $online_class)->where('id', $id)->first();
+        // delete material
+
         $content->delete();
 
         return $this->okResponse('Content deleted successfully');
