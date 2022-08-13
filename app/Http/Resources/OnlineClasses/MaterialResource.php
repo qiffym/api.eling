@@ -3,8 +3,9 @@
 namespace App\Http\Resources\OnlineClasses;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class ContentResource extends JsonResource
+class MaterialResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,15 +15,12 @@ class ContentResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'class' => $this->online_class->name,
             'title' => $this->title,
-            'description' => $this->desc,
-            'created_at' => $this->created_at->isoFormat('dddd, D MMMM Y'),
-            'updated_at' => $this->updated_at->diffForHumans(),
-            'materials' => MaterialResource::collection($this->materials),
+            'file' => Storage::url($this->file),
+            'created_at' => $this->created_at->diffForHumans(),
+            'content_of' => $this->content->title
         ];
     }
 }

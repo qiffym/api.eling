@@ -4,10 +4,12 @@ use App\Http\Controllers\Api\Admin\MotivationalWordController;
 use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\Teacher\MaterialController;
 use App\Http\Controllers\Api\Teacher\OnlineClassContentController;
 use App\Http\Controllers\Api\Teacher\OnlineClassController;
 use App\Http\Controllers\AuthController;
 use App\Http\Resources\Users\DetailUserResource;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -25,11 +27,10 @@ use Illuminate\Support\Facades\Route;
 // Guest routes
 Route::post('login', [AuthController::class, 'login']);
 
-// Fallback
-Route::fallback(fn () => response()->json('Not Found.', 404));
-
 // Auth routes
 Route::middleware('auth:sanctum')->group(fn () => [
+    // Fallback
+    Route::fallback(fn () => response()->json(['success' => false, 'message' => 'Not Found.'], 404)),
 
     // Me
     Route::get('/me', fn () => new DetailUserResource(Auth::user())),
@@ -52,7 +53,8 @@ Route::middleware('auth:sanctum')->group(fn () => [
     // Role Teacher
     Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => [
         Route::apiResource('online-classes', OnlineClassController::class),
-        Route::apiResource('online-classes/{online_class}/contents', OnlineClassContentController::class),
+        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents', OnlineClassContentController::class)),
+        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.materials', MaterialController::class)),
     ]),
 
     // Role Family
