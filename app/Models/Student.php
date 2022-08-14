@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Student extends Model
 {
@@ -41,5 +42,12 @@ class Student extends Model
     public function online_classes()
     {
         return $this->belongsToMany(OnlineClass::class, 'enrollment')->withTimestamps();
+    }
+
+    public function assignments(): BelongsToMany
+    {
+        return $this->belongsToMany(Assignment::class, 'student_assignment')
+            ->withPivot(['file', 'submitted_at', 'status', 'score'])
+            ->using(StudentAssignment::class);
     }
 }

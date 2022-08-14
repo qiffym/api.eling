@@ -60,12 +60,12 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
-    //# Eloquent Relationship
     public function gravatar($size = 150)
     {
-        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?d=mm&s='.$size;
+        return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=mm&s=' . $size;
     }
 
+    //# Eloquent Relationship
     public function teacher()
     {
         return $this->hasOne(Teacher::class);
@@ -79,5 +79,15 @@ class User extends Authenticatable
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function sub_comments()
+    {
+        return $this->hasMany(SubComment::class);
     }
 }
