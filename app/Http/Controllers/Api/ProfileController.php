@@ -8,8 +8,11 @@ use App\Http\Resources\Users\DetailUserResource;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -19,14 +22,16 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user = null)
     {
-        $user = User::find($id);
+        try {
+            $firstName = str($user->name)->words(1, '');
+            $message = "$firstName's profile retrieved successfully";
 
-        $firstName = str($user->name)->words(1, '');
-        $message = "$firstName's profile retrieved successfully";
-
-        return $this->okResponse($message, new DetailUserResource($user));
+            return $this->okResponse($message, new DetailUserResource($user));
+        } catch (\Throwable $th) {
+            return $this->notFoundResponse('Not Found.');
+        }
     }
 
     /**
@@ -36,13 +41,12 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProfileRequest $request, $id)
+    public function update(UpdateProfileRequest $request, User $user)
     {
-        $request->validated();
 
         try {
+            $request->validated();
             // update user
-            $user = User::where('id', $id);
             $user->update([
                 'name' => $request->name,
                 'username' => $request->username,
@@ -56,16 +60,51 @@ class ProfileController extends Controller
             ]);
 
             // update spesific role
-            if ($request->role == 3) { // teacher
-                Teacher::where('user_id', $id)->update(['nik' => $request->nik, 'nip' => $request->nip]);
+            if ($user->hasRole(3)) { // teacher
+                $user->teacher()->updateOrCreate(['user_id' => $user->id], ['nip' => $request->nip, 'nik' => $request->nik]);
             }
-            if ($request->role == 5) { // student
-                Student::where('user_id', $id)->update(['nis' => $request->nis, 'nisn' => $request->nisn]);
+
+            if ($user->hasRole(5)) { // student
+                $user->student()->updateOrCreate(['user_id' => $user->id], ['nis' => $request->nis, 'nisn' => $request->nisn]);
             }
 
             return $this->successResponse('Your profile has been updated successfully');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function updateProfileForTeacher(Request $request, User $user)
+    {
+        abort_if(!$user->hasRole(3), 403, 'Forbidden.');
+
+        try {
+            $request->validate([
+                'name' => 'required|string',
+                'username' => 'required|string|min:3|unique:users,username,' . $this->id,
+                'email' => 'nullable|email:rfc,dns|unique:users,email,' . $this->id,
+                'gender' => 'nullable|in:L,P',
+                'birthday' => 'nullable|date',
+                'religion' => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+                'address' => 'nullable|string',
+                'telpon' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+                'nik' => 'required_if:role,3|digits:16',
+                'nip' => 'nullable|digits:18',
+            ]);
+
+            $$user->update([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'gender' => $request->gender,
+                'birthday' => $request->birthday,
+                'religion' => $request->religion,
+                'address' => $request->address,
+                'telpon' => $request->telpon,
+                'status' => 1,
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 
@@ -101,7 +140,7 @@ class ProfileController extends Controller
             $user = User::find($id);
 
             // store image
-            $path = $request->file('avatar')->storeAs('avatars', time().'-'.str($user->name)->slug().'.'.$request->file('avatar')->extension());
+            $path = $request->file('avatar')->storeAs('avatars', time() . '-' . str($user->name)->slug() . '.' . $request->file('avatar')->extension());
 
             // cek & delete current avatar
             if ($user->avatar != null) {

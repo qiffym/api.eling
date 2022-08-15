@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -24,21 +25,35 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'role' => 'required|in:2,3,4,5',
             'name' => 'required|string',
-            'username' => 'required|string|min:3|unique:users,username,'.$this->id,
-            'email' => 'nullable|email:rfc,dns|unique:users,email,'.$this->id,
+            'username' => 'required|string|min:3|unique:users,username,' . $this->user->id,
+            'email' => 'nullable|email|unique:users,email,' . $this->user->id,
             'gender' => 'nullable|in:L,P',
             'birthday' => 'nullable|date',
             'religion' => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
             'address' => 'nullable|string',
             'telpon' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             // if teacher
-            'nik' => 'required_if:role,3|digits:16',
-            'nip' => 'nullable|digits:18',
+            'nik' => [
+                Rule::requiredIf($this->user->hasRole(3)),
+                Rule::prohibitedIf(!$this->user->hasRole(3)),
+                'digits:16'
+            ],
+            'nip' => [
+                Rule::prohibitedIf(!$this->user->hasRole(3)),
+                'nullable', 'digits:18'
+            ],
+
             // if student
-            'nis' => 'nullable|string',
-            'nisn' => 'required_if:role,5|digits:10',
+            'nis' => [
+                Rule::requiredIf($this->user->hasRole(5)),
+                Rule::prohibitedIf(!$this->user->hasRole(5)),
+                'regex:/^[0-9]+$/'
+            ],
+            'nisn' => [
+                Rule::prohibitedIf(!$this->user->hasRole(5)),
+                'nullable', 'digits:10'
+            ],
         ];
     }
 }

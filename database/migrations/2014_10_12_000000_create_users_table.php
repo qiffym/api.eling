@@ -24,7 +24,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->enum('gender', ['L', 'P'])->nullable();
             $table->string('avatar')->nullable();
-            $table->dateTime('birthday')->nullable();
+            $table->date('birthday')->nullable();
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])->nullable();
             $table->string('address')->nullable();
             $table->string('telpon', '15')->nullable();
