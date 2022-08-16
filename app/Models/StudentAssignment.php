@@ -9,6 +9,6 @@ class StudentAssignment extends Pivot
 {
     public function status(): BelongsTo
     {
-        return $this->belongsTo(StatusStudentAssignment::class, 'status');
+        return $this->belongsTo(StatusStudentAssignment::class, 'status_id');
     }
 }

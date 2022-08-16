@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->primary(['assignment_id', 'student_id']);
             $table->string('file')->nullable();
-            $table->foreignId('status')->nullable()->references('id')->on('status_student_assignments');
+            $table->foreignId('status_id')->nullable()->references('id')->on('status_student_assignments');
             $table->timestamp('submitted_at')->nullable();
-            $table->decimal('score', 5, 1);
+            $table->decimal('score', 5, 1)->nullable();
             $table->timestamps();
         });
     }

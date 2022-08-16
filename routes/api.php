@@ -64,7 +64,6 @@ Route::middleware('auth:sanctum')->group(fn () => [
         Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.materials', MaterialController::class)),
         Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.forums', ForumController::class)),
         Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.forums.comments', CommentController::class)->only(['store', 'update', 'destroy'])),
-
     ]),
 
     // Role Student

@@ -2,7 +2,10 @@
 
 namespace App\Http\Resources\OnlineClasses;
 
+use App\Models\StudentAssignment;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class StudentResource extends JsonResource
 {
@@ -23,6 +26,13 @@ class StudentResource extends JsonResource
             'nis' => $this->nis,
             'nisn' => $this->nisn,
             'join_at' => $this->pivot->created_at->diffForHumans(),
+            'assignment' => $this->whenPivotLoaded(new StudentAssignment, fn () => [
+                'status' => $this->pivot->status->name,
+                'grading_status' => $this->when(is_null($this->pivot->score) && $this->pivot->status_id === 2, 'Menunggu untuk dinilai.'),
+                'file' => $this->pivot->file ? Storage::url($this->pivot->file) : 'Tidak ada.',
+                'submitted_at' => $this->submitted_at ? Carbon::parse($this->submitted_at)->diffForHumans() : 'Belum mengumpulkan.',
+                'score' => $this->pivot->score ?? '--',
+            ])
         ];
     }
 }

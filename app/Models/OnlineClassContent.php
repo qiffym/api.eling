@@ -27,4 +27,9 @@ class OnlineClassContent extends Model
     {
         return $this->hasMany(DiscussionForum::class, 'online_class_content_id');
     }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class, 'online_class_content_id');
+    }
 }
