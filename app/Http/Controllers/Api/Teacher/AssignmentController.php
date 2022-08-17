@@ -7,8 +7,11 @@ use App\Http\Resources\OnlineClasses\AssignmentResource;
 use App\Models\Assignment;
 use App\Models\OnlineClass;
 use App\Models\OnlineClassContent;
-use GrahamCampbell\ResultType\Success;
+use App\Notifications\AssignmentNotification;
+use App\Notifications\AssignmentUpdated;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AssignmentController extends Controller
 {
@@ -49,12 +52,25 @@ class AssignmentController extends Controller
             'description' => $request->description,
             'deadline' => $request->deadline,
         ]);
+        $students = $online_class->students()->get();
 
-        // attach assignment to students who enroll on this online class
-        $students = $online_class->students()->pluck('id');
+        // TODO: attach assignment to students who enroll on this online class
         if (!is_null($students)) {
             $assignment->students()->attach($students, ['status_id' => 1]);
         }
+
+        // TODO: send notification to student who enroll on this online class
+        $data = [
+            'message' => "Kamu mendapat tugas baru pada $content->title dalam pelajaran $online_class->name",
+            'details' => [
+                'online_class_id' => $online_class->id,
+                'content_id' => $content->id,
+                'assignment_id' => $assignment->id,
+                'assignment_title' => $assignment->title,
+                'assignment_deadline' => Carbon::parse($assignment->deadline)->isoFormat('dddd, D MMM H:mm')
+            ]
+        ];
+        Notification::send($students, new AssignmentNotification($data));
 
         return $this->acceptedResponse('Assignment created successfully');
     }
@@ -86,17 +102,29 @@ class AssignmentController extends Controller
         ]);
 
         $assignment->update([
-            'online_class_content_id' => $content->id,
             'title' => $request->title,
             'description' => $request->description,
             'deadline' => $request->deadline,
         ]);
 
-        // attach assignment to students who enroll on this online class
-        $students = $online_class->students()->pluck('id');
+        // TODO: sync assignment to students who enroll on this online class
+        $students = $online_class->students()->get();
         if (!is_null($students)) {
             $assignment->students()->sync($students);
         }
+
+        // TODO: send notification to student who enroll on this online class
+        $data = [
+            'message' => "Tugas kamu pada $content->title dalam pelajaran $online_class->name telah diperbarui",
+            'details' => [
+                'online_class_id' => $online_class->id,
+                'content_id' => $content->id,
+                'assignment_id' => $assignment->id,
+                'assignment_title' => $assignment->title,
+                'assignment_deadline' => Carbon::parse($assignment->deadline)->isoFormat('dddd, D MMM H:mm')
+            ]
+        ];
+        Notification::send($students, new AssignmentUpdated($data));
 
         return $this->acceptedResponse('Assignment updated successfully');
     }
