@@ -51,19 +51,23 @@ Route::middleware('auth:sanctum')->group(fn () => [
     // * Route for Specific Role
     // Role Admin
     Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [
-        Route::apiResource('resources/users', UserController::class),
-        Route::apiResource('resources/rombel-classes', RombelClassController::class),
-        Route::apiResource('resources/motivational-words', MotivationalWordController::class),
+        Route::apiResources([
+            'resources/users' => UserController::class,
+            'resources/rombel-classes' => RombelClassController::class,
+            'resources/motivational-words' => MotivationalWordController::class
+        ]),
     ]),
 
     // Role Teacher
     Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => [
         Route::apiResource('online-classes', OnlineClassController::class),
-        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents', OnlineClassContentController::class)),
-        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.assignments', AssignmentController::class)),
-        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.materials', MaterialController::class)),
-        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.forums', ForumController::class)),
-        Route::scopeBindings()->group(fn () => Route::apiResource('online-classes.contents.forums.comments', CommentController::class)->only(['store', 'update', 'destroy'])),
+        Route::scopeBindings()->group(fn () => [
+            Route::apiResource('online-classes.contents', OnlineClassContentController::class),
+            Route::apiResource('online-classes.contents.assignments', AssignmentController::class),
+            Route::apiResource('online-classes.contents.materials', MaterialController::class),
+            Route::apiResource('online-classes.contents.forums', ForumController::class),
+            Route::apiResource('online-classes.contents.forums.comments', CommentController::class)->only(['store', 'update', 'destroy'])
+        ]),
     ]),
 
     // Role Student
@@ -71,7 +75,4 @@ Route::middleware('auth:sanctum')->group(fn () => [
 
     // Role Family
     Route::middleware('auth:sanctum', 'ability:role:family')->prefix('family')->group(fn () => []),
-
-
-
 ]);
