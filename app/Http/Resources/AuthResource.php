@@ -20,6 +20,7 @@ class AuthResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'role' => $this->getRoleNames()->first(),
+            'avatar' => $this->avatar ? asset('storage/' . $this->avatar) : $this->gravatar(),
         ];
     }
 }
