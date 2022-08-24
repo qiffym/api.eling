@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\Student\DashboardController;
+use App\Http\Controllers\Api\Student\NotificationController as StudentNotificationController;
 use App\Http\Controllers\Api\Teacher\AssignmentController;
 use App\Http\Controllers\Api\Teacher\ForumController;
 use App\Http\Controllers\Api\Teacher\MaterialController;
@@ -66,12 +68,29 @@ Route::middleware('auth:sanctum')->group(fn () => [
             Route::apiResource('online-classes.contents.assignments', AssignmentController::class),
             Route::apiResource('online-classes.contents.materials', MaterialController::class),
             Route::apiResource('online-classes.contents.forums', ForumController::class),
-            Route::apiResource('online-classes.contents.forums.comments', CommentController::class)->only(['store', 'update', 'destroy'])
+            Route::apiResource('online-classes.contents.forums.comments', CommentController::class)->only(['store', 'update', 'destroy']),
         ]),
     ]),
 
     // Role Student
-    Route::middleware('auth:sanctum', 'ability:role:student')->prefix('student')->group(fn () => []),
+    Route::middleware('auth:sanctum', 'ability:role:student')->prefix('student')->group(fn () => [
+        // Dashboard
+        Route::controller(DashboardController::class)->group(fn () => [
+            Route::get('my-classes', 'MyOnlineClasses'),
+            Route::get('upcoming-assignments', 'UpcomingAssignments'),
+            Route::get('random-motivational-word', 'RandomMotivationalWord'),
+        ]),
+        // Notifications
+        Route::controller(StudentNotificationController::class)->group(fn () => [
+            Route::get('notifications/read', 'read'),
+            Route::get('notifications/unread', 'unread'),
+            Route::patch('notifications/unread', 'markAllAsRead'),
+            Route::get('notifications', 'index'),
+            Route::patch('notifications/{id}', 'markAsRead'),
+        ])
+        // Detail Online Class
+        // Submission
+    ]),
 
     // Role Family
     Route::middleware('auth:sanctum', 'ability:role:family')->prefix('family')->group(fn () => []),

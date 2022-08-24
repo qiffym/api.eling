@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Users;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StudentResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,10 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->user->name,
-            'nis' => $this->nis,
-            'nisn' => $this->nisn,
+            'type' => str($this->type)->afterLast('\\'),
+            'notification' => $this->data,
+            'read_at' => $this->read_at ? $this->read_at->diffForHumans() : null,
+            'created_at' => $this->created_at->isoFormat('D MMM. H:mm'),
         ];
     }
 }
