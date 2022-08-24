@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('status_student_assignments', function (Blueprint $table) {
+        Schema::create('submission_status', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->tinyText('short_description')->nullable();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('status_student_assignments');
+        Schema::dropIfExists('submission_status');
     }
 };

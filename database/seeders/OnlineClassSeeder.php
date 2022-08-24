@@ -25,9 +25,9 @@ class OnlineClassSeeder extends Seeder
         $rombel = RombelClass::find(1);
 
         // enroll student from rombel_class
-        if (! is_null($rombel->students)) {
+        if (!is_null($rombel->students)) {
             $oc = OnlineClass::find($new->id);
-            $oc->students()->sync($rombel->students->pluck('id'));
+            $oc->students()->sync($rombel->students()->get());
         }
     }
 }

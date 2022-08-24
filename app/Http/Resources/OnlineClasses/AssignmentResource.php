@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\OnlineClasses;
 
-use App\Models\StudentAssignment;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +21,7 @@ class AssignmentResource extends JsonResource
             'description' => $this->description,
             'deadline' => Carbon::parse($this->deadline)->diffForHumans(),
             'created_at' => $this->created_at->diffForHumans(),
-            'student_assignments' => $this->when($request->user()->hasRole(3), StudentResource::collection($this->students)),
+            'submission' => $this->when($request->user()->hasRole(3), StudentResource::collection($this->students)),
         ];
     }
 }

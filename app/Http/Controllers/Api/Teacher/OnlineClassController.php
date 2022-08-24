@@ -61,7 +61,7 @@ class OnlineClassController extends Controller
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (! is_null($rombel->students)) {
+            if (!is_null($rombel->students)) {
                 $oc = OnlineClass::find($new->id);
                 $oc->students()->sync($rombel->students->pluck('id'));
             }
@@ -82,11 +82,12 @@ class OnlineClassController extends Controller
     {
         try {
             $oc = OnlineClass::where('teacher_id', auth()->user()->teacher->id)->where('id', $id)->first();
-            $message = "Detail online class named $oc->name for ".$oc->rombel_class->name.' retrieved successfully';
+            $message = "Detail online class named $oc->name for " . $oc->rombel_class->name . ' retrieved successfully';
 
             return $this->okResponse($message, new DetailOnlineClassResource($oc));
         } catch (\Throwable $th) {
-            return $this->forbiddenResponse('You cannot see online class that created by other teachers');
+            return response()->json(['error' => $th->getMessage()], 500);
+            // return $this->forbiddenResponse('You cannot see online class that created by other teachers');
         }
     }
 
@@ -116,7 +117,7 @@ class OnlineClassController extends Controller
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (! is_null($rombel->students)) {
+            if (!is_null($rombel->students)) {
                 $oc = OnlineClass::find($new->id);
                 $oc->students()->sync($rombel->students->pluck('id'));
             }

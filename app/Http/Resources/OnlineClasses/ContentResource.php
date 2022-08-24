@@ -17,12 +17,15 @@ class ContentResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'class' => $this->online_class->name,
+            'rombel' => $this->online_class->rombel_class->name,
+            'online_class' => $this->online_class->name,
             'title' => $this->title,
             'description' => $this->desc,
             'created_at' => $this->created_at->isoFormat('dddd, D MMMM Y'),
             'updated_at' => $this->updated_at->diffForHumans(),
             'materials' => MaterialResource::collection($this->materials),
+            'assignment' => AssignmentResource::collection($this->assignments),
+
         ];
     }
 }

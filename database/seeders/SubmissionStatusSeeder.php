@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\StatusStudentAssignment;
+use App\Models\SubmissionStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class StatusAssignmentSeeder extends Seeder
+class SubmissionStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,11 +15,11 @@ class StatusAssignmentSeeder extends Seeder
      */
     public function run()
     {
-        StatusStudentAssignment::create([
+        SubmissionStatus::create([
             'name' => 'Tugas baru telah diberikan',
             'short_description' => 'Status awal ketika guru membuat assignment awal',
         ]);
-        StatusStudentAssignment::create([
+        SubmissionStatus::create([
             'name' => 'Tugas sudah dikumpulkan',
             'short_description' => 'Status ketika siswa sudah mengumpulkan tugas',
         ]);

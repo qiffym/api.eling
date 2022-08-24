@@ -18,24 +18,21 @@ class OnlineClassContentController extends Controller
      */
     public function index(OnlineClass $online_class)
     {
-        try {
-            $contents = OnlineClassContent::where('online_class_id', $online_class->id)->get();
-            $data = collect($contents)->map(fn ($content) => [
-                'id' => $content->id,
-                'title' => $content->title,
-                'description' => $content->desc,
-                'created_at' => $content->created_at->diffForHumans(),
-            ]);
+        $contents = OnlineClassContent::where('online_class_id', $online_class->id)->get();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'All contents retrieved successfully',
-                'online_class_name' => "$online_class->name (" . $online_class->rombel_class->name . ')',
-                'data' => $data,
-            ], 200);
-        } catch (\Throwable $th) {
-            return $this->notFoundResponse('Not Found.');
-        }
+        $data = collect($contents)->map(fn ($content) => [
+            'id' => $content->id,
+            'title' => $content->title,
+            'description' => $content->desc,
+            'created_at' => $content->created_at->diffForHumans(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All contents retrieved successfully',
+            'online_class_name' => "$online_class->name (" . $online_class->rombel_class->name . ')',
+            'data' => $data,
+        ], 200);
     }
 
     /**
@@ -72,11 +69,7 @@ class OnlineClassContentController extends Controller
      */
     public function show(OnlineClass $online_class, OnlineClassContent $content)
     {
-        try {
-            return $this->okResponse('Detail content retrieved successfully', new ContentResource($content));
-        } catch (\Throwable $th) {
-            return $this->notFoundResponse('Not Found.');
-        }
+        return $this->okResponse('Detail content retrieved successfully', new ContentResource($content));
     }
 
     /**

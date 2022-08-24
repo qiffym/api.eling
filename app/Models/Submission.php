@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class StudentAssignment extends Pivot
+class Submission extends Pivot
 {
     public function status(): BelongsTo
     {
-        return $this->belongsTo(StatusStudentAssignment::class, 'status_id');
+        return $this->belongsTo(SubmissionStatus::class, 'status_id');
     }
 }
