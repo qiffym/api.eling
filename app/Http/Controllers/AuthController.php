@@ -17,7 +17,7 @@ class AuthController extends Controller
 
         $credType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (! Auth::attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
+        if (!Auth::attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
             return $this->unauthenticatedResponse('The provided credentials do not match our records.');
         }
 
@@ -32,6 +32,7 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'You have successfully logged out',
         ]);
     }
