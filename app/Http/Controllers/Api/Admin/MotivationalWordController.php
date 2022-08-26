@@ -109,8 +109,8 @@ class MotivationalWordController extends Controller
     public function checkRole()
     {
         /** @var \App\Models\User $auth * */
-        $auth = auth()->user();
-        if (! $auth->hasRole('admin')) {
+        $auth = auth('api')->user();
+        if (!$auth->hasRole('admin')) {
             return $this->forbiddenResponse('Forbidden.');
         }
     }

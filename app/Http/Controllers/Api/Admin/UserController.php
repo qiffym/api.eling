@@ -94,8 +94,8 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'role' => 'required|in:1,2,3,4,5',
-                'username' => 'required|string|min:3|unique:users,username,'.$id,
-                'email' => 'nullable|email:rfc,dns|unique:users,email,'.$id,
+                'username' => 'required|string|min:3|unique:users,username,' . $id,
+                'email' => 'nullable|email:rfc,dns|unique:users,email,' . $id,
                 'gender' => 'in:L,P|nullable',
                 'birthday' => 'date|nullable',
                 'religion' => 'in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu|nullable',
@@ -167,7 +167,7 @@ class UserController extends Controller
     {
         /** @var \App\Models\User $auth * */
         $auth = auth()->user();
-        if (! $auth->tokenCan('role:admin')) {
+        if (!$auth->tokenCan('role:admin')) {
             return $this->forbiddenResponse('Forbidden.');
         }
     }

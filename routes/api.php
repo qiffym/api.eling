@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 
 // Auth routes
-Route::middleware('auth:sanctum')->group(fn () => [
+Route::middleware('auth:api')->group(fn () => [
     // logout
     Route::post('logout', [AuthController::class, 'logout']),
 
@@ -52,7 +52,7 @@ Route::middleware('auth:sanctum')->group(fn () => [
 
     // * Route for Specific Role
     // Role Admin
-    Route::middleware('auth:sanctum', 'ability:role:admin')->prefix('admin')->group(fn () => [
+    Route::middleware('auth:api', 'scope:admin')->prefix('admin')->group(fn () => [
         Route::apiResources([
             'resources/users' => UserController::class,
             'resources/rombel-classes' => RombelClassController::class,
@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(fn () => [
     ]),
 
     // Role Teacher
-    Route::middleware('auth:sanctum', 'ability:role:teacher')->prefix('teacher')->group(fn () => [
+    Route::middleware('auth:api', 'scope:teacher')->prefix('teacher')->group(fn () => [
         Route::apiResource('online-classes', OnlineClassController::class),
         Route::scopeBindings()->group(fn () => [
             Route::apiResource('online-classes.contents', OnlineClassContentController::class),
@@ -73,7 +73,7 @@ Route::middleware('auth:sanctum')->group(fn () => [
     ]),
 
     // Role Student
-    Route::middleware('auth:sanctum', 'ability:role:student')->prefix('student')->group(fn () => [
+    Route::middleware('auth:api', 'scope:student')->prefix('student')->group(fn () => [
         // Dashboard
         Route::controller(DashboardController::class)->group(fn () => [
             Route::get('my-classes', 'MyOnlineClasses'),
@@ -93,5 +93,5 @@ Route::middleware('auth:sanctum')->group(fn () => [
     ]),
 
     // Role Family
-    Route::middleware('auth:sanctum', 'ability:role:family')->prefix('family')->group(fn () => []),
+    Route::middleware('auth:api', 'scope:family')->prefix('family')->group(fn () => []),
 ]);

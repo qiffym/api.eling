@@ -17,9 +17,10 @@ class AuthController extends Controller
 
         $credType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (!Auth::attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
+        if (!Auth::guard('web')->attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
             return $this->unauthenticatedResponse('The provided credentials do not match our records.');
         }
+
 
         return $this->response(Auth::user());
     }
@@ -40,16 +41,19 @@ class AuthController extends Controller
     public function response($user)
     {
         if ($user->hasRole('admin')) {
-            $token = $user->createToken('e-learning', ['role:admin'])->plainTextToken;
-        } elseif ($user->hasRole('teacher')) {
-            $token = $user->createToken('e-learning', ['role:teacher'])->plainTextToken;
-        } elseif ($user->hasRole('family')) {
-            $token = $user->createToken('e-learning', ['role:family'])->plainTextToken;
-        } elseif ($user->hasRole('student')) {
-            $token = $user->createToken('e-learning', ['role:student'])->plainTextToken;
-        } else {
-            $token = $user->createToken('e-learning', ['role:student'])->plainTextToken;
+            $token = $user->createToken('Eling', ['admin'])->accessToken;
         }
+        if ($user->hasRole('teacher')) {
+            $token = $user->createToken('Eling', ['teacher'])->accessToken;
+        }
+        if ($user->hasRole('family')) {
+            $token = $user->createToken('Eling', ['family'])->accessToken;
+        }
+        if ($user->hasRole('student')) {
+            $token = $user->createToken('Eling', ['student'])->accessToken;
+        }
+
+        // $token = $user->createToken('Token Name')->accessToken;
 
         return $this->okResponse('You have successfully logged in', ['user' => new AuthResource($user), 'token' => $token]);
     }
