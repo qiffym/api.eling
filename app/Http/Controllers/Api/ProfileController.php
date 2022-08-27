@@ -74,41 +74,43 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateProfileForTeacher(Request $request, User $user)
-    {
-        abort_if(!$user->hasRole(3), 403, 'Forbidden.');
+    /*
+        public function updateProfileForTeacher(Request $request, User $user)
+        {
+            abort_if(!$user->hasRole(3), 403, 'Forbidden.');
 
-        try {
-            $request->validate([
-                'name' => 'required|string',
-                'username' => 'required|string|min:3|unique:users,username,' . $this->id,
-                'email' => 'nullable|email:rfc,dns|unique:users,email,' . $this->id,
-                'gender' => 'nullable|in:L,P',
-                'birthday' => 'nullable|date',
-                'religion' => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
-                'address' => 'nullable|string',
-                'telpon' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-                'nik' => 'required_if:role,3|digits:16',
-                'nip' => 'nullable|digits:18',
-            ]);
+            try {
+                $request->validate([
+                    'name' => 'required|string',
+                    'username' => 'required|string|min:3|unique:users,username,' . $this->id,
+                    'email' => 'nullable|email:rfc,dns|unique:users,email,' . $this->id,
+                    'gender' => 'nullable|in:L,P',
+                    'birthday' => 'nullable|date',
+                    'religion' => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+                    'address' => 'nullable|string',
+                    'telpon' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+                    'nik' => 'required_if:role,3|digits:16',
+                    'nip' => 'nullable|digits:18',
+                ]);
 
-            $$user->update([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'gender' => $request->gender,
-                'birthday' => $request->birthday,
-                'religion' => $request->religion,
-                'address' => $request->address,
-                'telpon' => $request->telpon,
-                'status' => 1,
-            ]);
-        } catch (\Throwable $th) {
-            //throw $th;
+                $$user->update([
+                    'name' => $request->name,
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'gender' => $request->gender,
+                    'birthday' => $request->birthday,
+                    'religion' => $request->religion,
+                    'address' => $request->address,
+                    'telpon' => $request->telpon,
+                    'status' => 1,
+                ]);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
-    }
+    */
 
-    public function updatePassword(Request $request, $id)
+    public function updatePassword(Request $request)
     {
         try {
             $request->validate([
@@ -116,7 +118,7 @@ class ProfileController extends Controller
                 'new_password' => 'required_with:password|confirmed',
             ]);
 
-            $user = User::find($id);
+            $user = $request->user();
             $user->password = $request->new_password;
             $user->save();
 
@@ -130,14 +132,14 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateAvatar(Request $request, $id)
+    public function updateAvatar(Request $request)
     {
         try {
             $request->validate([
                 'avatar' => 'required|mimes:jpg,bmp,png|image|max:5120',
             ]);
 
-            $user = User::find($id);
+            $user = $request->user();
 
             // store image
             $path = $request->file('avatar')->storeAs('avatars', time() . '-' . str($user->name)->slug() . '.' . $request->file('avatar')->extension());

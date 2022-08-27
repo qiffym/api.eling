@@ -33,12 +33,14 @@ class NotificationController extends Controller
         return $this->successResponse("Read notification retrieved successfully", NotificationResource::collection($notifications));
     }
 
-    public function markAsRead($id)
+    public function show($id)
     {
         $student = Student::where('user_id', auth()->user()->id)->first();
 
-        $student->unreadNotifications()->whereId($id)->update(['read_at' => now()]);
-        return $this->acceptedResponse("Marked as read");
+        $notification = $student->unreadNotifications()->whereId($id)->first();
+        $notification->update(['read_at' => now()]);
+
+        return $this->successResponse("Notification has been read", new NotificationResource($notification));
     }
 
     public function markAllAsRead()

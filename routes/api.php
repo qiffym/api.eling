@@ -44,8 +44,8 @@ Route::middleware('auth:api')->group(fn () => [
 
     // Profile
     Route::controller(ProfileController::class)->group(fn () => [
-        Route::patch('profile/update-password/{user}', 'updatePassword'),
-        Route::patch('profile/update-avatar/{user}', 'updateAvatar'),
+        Route::patch('profile/update-password', 'updatePassword'),
+        Route::patch('profile/update-avatar', 'updateAvatar'),
         Route::match(['put', 'patch'], 'profile/{user}', 'update'),
         Route::get('profile/{user}', 'show'),
     ]),
@@ -86,7 +86,7 @@ Route::middleware('auth:api')->group(fn () => [
             Route::get('notifications/unread', 'unread'),
             Route::patch('notifications/unread', 'markAllAsRead'),
             Route::get('notifications', 'index'),
-            Route::patch('notifications/{id}', 'markAsRead'),
+            Route::get('notifications/{id}', 'show'),
         ])
         // Detail Online Class
         // Submission

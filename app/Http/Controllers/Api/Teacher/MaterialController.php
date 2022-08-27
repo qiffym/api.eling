@@ -19,19 +19,14 @@ class MaterialController extends Controller
      */
     public function index(OnlineClass $online_class, OnlineClassContent $content)
     {
-        try {
-            $materials = Material::where('online_class_content_id', $content->id)->get();
-            $data = collect($materials)->map(fn ($material) => [
-                'id' => $material->id,
-                'title' => $material->title,
-                'file' => Storage::url($material->file),
-                'created_at' => $material->created_at->diffForHumans(),
-            ]);
-
-            return $this->successResponse("All materials from $content->title of $online_class->name (" . $online_class->rombel_class->name . ") retrieved successfully", $data);
-        } catch (\Throwable $th) {
-            return $this->notFoundResponse('Not Found.');
-        }
+        $materials = Material::where('online_class_content_id', $content->id)->get();
+        $data = collect($materials)->map(fn ($material) => [
+            'id' => $material->id,
+            'title' => $material->title,
+            'file' => Storage::url($material->file),
+            'created_at' => $material->created_at->diffForHumans(),
+        ]);
+        return $this->successResponse("All materials from $content->title of $online_class->name (" . $online_class->rombel_class->name . ") retrieved successfully", $data);
     }
 
     /**
@@ -48,13 +43,13 @@ class MaterialController extends Controller
                 'file' => 'required|file',
             ]);
 
-            $id_guru = $online_class->teacher->id;
-            $content_title = str($content->title)->slug();
-            $string_path = "online-classes/$id_guru/$online_class->id/$content_title/materials";
+            $nama_guru = str($online_class->teacher->user->name)->camel();
+            $oc_name = str($online_class->name)->camel();
+            $string_path = "uploads/$nama_guru/$oc_name/materials";
 
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
-                $path = $file->storeAs($string_path, $file->getClientOriginalName());
+                $path = $file->storeAs($string_path, str($file->getClientOriginalName())->camel());
             }
 
             Material::create([
@@ -77,11 +72,8 @@ class MaterialController extends Controller
      */
     public function show(OnlineClass $online_class, OnlineClassContent $content, Material $material)
     {
-        try {
-            return $this->okResponse('Materi retrieved sucessfully', new MaterialResource($material));
-        } catch (\Throwable $th) {
-            return $this->notFoundResponse('Not Found.');
-        }
+
+        return $this->okResponse('Materi retrieved sucessfully', new MaterialResource($material));
     }
 
     /**
@@ -93,31 +85,28 @@ class MaterialController extends Controller
      */
     public function update(Request $request, OnlineClass $online_class, OnlineClassContent $content, Material $material)
     {
-        try {
-            $request->validate([
-                'title' => 'required|string',
-                'file' => 'nullable|file',
-            ]);
 
-            $id_guru = $online_class->teacher->id;
-            $content_title = str($content->title)->slug();
-            $string_path = "online-classes/$id_guru/$online_class->id/$content_title/materials";
+        $request->validate([
+            'title' => 'required|string',
+            'file' => 'nullable|file',
+        ]);
 
-            if ($request->hasFile('file')) {
-                Storage::delete($material->file);
+        $nama_guru = str($online_class->teacher->user->name)->camel();
+        $oc_name = str($online_class->name)->camel();
+        $string_path = "uploads/$nama_guru/$oc_name/materials";
 
-                $file = $request->file('file');
-                $path = $file->storeAs($string_path, $file->getClientOriginalName());
-                $material->file = $path;
-            }
+        if ($request->hasFile('file')) {
+            Storage::delete($material->file);
 
-            $material->title = $request->title;
-            $material->save();
-
-            return $this->acceptedResponse('material updated successfully');
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
+            $file = $request->file('file');
+            $path = $file->storeAs($string_path, str($file->getClientOriginalName())->camel());
+            $material->file = $path;
         }
+
+        $material->title = $request->title;
+        $material->save();
+
+        return $this->acceptedResponse('material updated successfully');
     }
 
     /**
