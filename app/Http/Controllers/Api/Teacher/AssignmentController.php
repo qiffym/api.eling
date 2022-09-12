@@ -15,11 +15,7 @@ use Illuminate\Support\Facades\Notification;
 
 class AssignmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(OnlineClass $online_class, OnlineClassContent $content)
     {
         $assignments = Assignment::whereBelongsTo($content, 'content')->get();
@@ -32,12 +28,7 @@ class AssignmentController extends Controller
         return $this->successResponse("Assignments from $content->title retrieved successfully", $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request, OnlineClass $online_class, OnlineClassContent $content)
     {
         $request->validate([
@@ -75,24 +66,13 @@ class AssignmentController extends Controller
         return $this->acceptedResponse('Assignment created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
     {
         return $this->successResponse('Detail assignment retrieved successfully', new AssignmentResource($assignment));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
     {
         $request->validate([
@@ -129,15 +109,29 @@ class AssignmentController extends Controller
         return $this->acceptedResponse('Assignment updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
     {
         $assignment->delete();
         return $this->successResponse('Assignment deleted successfully');
+    }
+
+    public function unSubmitted(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
+    {
+        $query = $assignment->students()->wherePivot('submitted_at', null)->get();
+        return $this->okResponse('Ungrading retireved', $query);
+    }
+
+    public function unGrading(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
+    {
+        $query = $assignment->students()->wherePivot('status_id', 2)->get();
+        return $this->okResponse('Ungrading retireved', $query);
+    }
+
+    public function grade(Request $request, OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'score' => 'required|max:100',
+        ]);
     }
 }

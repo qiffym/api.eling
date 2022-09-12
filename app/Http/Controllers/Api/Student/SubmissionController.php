@@ -61,23 +61,28 @@ class SubmissionController extends Controller
             ]);
 
             $student = Auth::user()->student;
-            // $submission = $student->assignments()->where('assignment_id', $id)->first();
-            $submission = $student->assignments();
-            $content = $submission->where('assignment_id', $id)->first()->content->title;
+            $submissions = $student->assignments();
+            $submission = $student->assignments()->where('assignment_id', $id)->first();
+            $content = $submission->content->title;
 
-            // $nama_guru = str($online_class->teacher->user->name)->camel();
-            // $oc_name = str($online_class->name)->camel();
             $student_name = str($student->user->name)->camel();
+            $rombel_name = str($student->rombel_class->name)->camel();
+            $oc_name = str($submission->content->online_class->name)->camel();
             $content_name = str($content)->camel();
-            $string_path = "uploads/submissions/$student_name/$content_name";
+            $string_path = "uploads/submissions/$rombel_name/$student_name/$oc_name/$content_name";
 
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $path = $file->storeAs($string_path, str($file->getClientOriginalName())->camel());
             }
 
-            $submission->updateExistingPivot($id, ['file' => $path, 'status_id' => 2, 'submitted_at' => now()]);
+            $deadline = $submission->deadline;
+            if ($deadline > now() == false) {
+                $submissions->updateExistingPivot($id, ['file' => $path, 'status_id' => 3, 'submitted_at' => now()]);
+                return $this->okResponse('Mengumpulkan terlambat.');
+            }
 
+            $submissions->updateExistingPivot($id, ['file' => $path, 'status_id' => 2, 'submitted_at' => now()]);
             return $this->okResponse('Upload success.');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()]);

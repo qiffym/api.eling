@@ -24,9 +24,10 @@ class SubmissionRecource extends JsonResource
             'deadline' => $this->deadline,
             'submission' => [
                 'status' => $this->pivot->status->name,
+                'grading_status' => $this->when(is_null($this->pivot->score) && $this->pivot->status_id === 2, 'Menunggu untuk dinilai.'),
+                'file' => $this->pivot->file ? Storage::url($this->pivot->file) : 'Tidak ada.',
                 'submitted_at' => $this->pivot->submitted_at ? Carbon::parse($this->pivot->submitted_at)->diffForHumans() : '--',
-                'file' => $this->pivot->file ? Storage::url($this->pivot->file) : '--',
-                'score' => $this->pivot->score ?? '--'
+                'score' => $this->pivot->score ?? '--',
             ]
         ];
     }

@@ -68,6 +68,8 @@ Route::middleware('auth:api')->group(fn () => [
         Route::apiResource('online-classes', OnlineClassController::class),
         Route::scopeBindings()->group(fn () => [
             Route::apiResource('online-classes.contents', OnlineClassContentController::class),
+            // Ungrading
+            Route::get('online-classes/{online_class}/contents/{content}/assignments/{assignment}/ungrading', [AssignmentController::class, 'unGrading']),
             Route::apiResource('online-classes.contents.assignments', AssignmentController::class),
             Route::apiResource('online-classes.contents.materials', MaterialController::class),
             Route::apiResource('online-classes.contents.forums', ForumController::class),
