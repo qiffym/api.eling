@@ -42,10 +42,10 @@ class UserController extends Controller
         try {
             $input = $request->validate([
                 'name' => 'required|string',
-                'role' => 'required|in:1,2,3,4,5',
+                'role' => 'required|in:1,2,3',
                 'gender' => 'in:L,P',
                 'username' => 'required|unique:users,username|string|min:3',
-                'email' => 'email:rfc,dns',
+                'email' => 'email',
                 'password' => 'required|string|min:5',
             ]);
             $validatedData = Arr::except($input, 'role');
@@ -93,7 +93,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
-                'role' => 'required|in:1,2,3,4,5',
+                'role' => 'required|in:1,2,3',
                 'username' => 'required|string|min:3|unique:users,username,' . $id,
                 'email' => 'nullable|email:rfc,dns|unique:users,email,' . $id,
                 'gender' => 'in:L,P|nullable',
@@ -174,26 +174,22 @@ class UserController extends Controller
 
     public function attachSpecificRole($role, $user_id)
     {
-        if ($role == 3) { // teacher
+        if ($role == 2) { // teacher
             Teacher::create(['user_id' => $user_id]);
         }
-        if ($role == 4) { // family
-            Family::create(['user_id' => $user_id]);
-        }
-        if ($role == 5) { // student
+
+        if ($role == 3) { // student
             Student::create(['user_id' => $user_id]);
         }
     }
 
     public function detachSpecificRole($currentRole, $user_id)
     {
-        if ($currentRole == 3) {
+        if ($currentRole == 2) {
             Teacher::where('user_id', $user_id)->delete();
         }
-        if ($currentRole == 4) {
-            Family::where('user_id', $user_id)->delete();
-        }
-        if ($currentRole == 5) {
+
+        if ($currentRole == 3) {
             Student::where('user_id', $user_id)->delete();
         }
     }

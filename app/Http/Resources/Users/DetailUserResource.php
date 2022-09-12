@@ -27,9 +27,8 @@ class DetailUserResource extends JsonResource
             'religion' => $this->religion,
             'address' => $this->address,
             'status' => ($this->status == 1) ? 'Active' : 'Deactive',
-            'teacher' => $this->when($this->hasRole(3), new TeacherResource($this->teacher)),
-            'student' => $this->when($this->hasRole(5), new StudentResource($this->student)),
-            'family' => $this->when($this->hasRole(4), $this->family),
+            'teacher' => $this->when($this->hasRole('teacher'), new TeacherResource($this->teacher)),
+            'student' => $this->when($this->hasRole('student'), new StudentResource($this->student)),
             'avatar' => $this->avatar ? asset('storage/' . $this->avatar) : $this->gravatar(),
         ];
     }

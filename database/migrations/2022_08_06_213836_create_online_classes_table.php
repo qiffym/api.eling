@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('teacher_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->text('desc')->nullable();
+            $table->enum('day', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'])->nullable();
             $table->foreignId('rombel_class_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

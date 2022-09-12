@@ -20,7 +20,7 @@ class StudentResource extends JsonResource
             'nis' => $this->nis,
             'nisn' => $this->nisn,
             'rombel' => $this->rombel_class->name,
-            'parent' => $this->family->user->name,
+            // 'parent' => $this->family->user->name,
         ];
     }
 }

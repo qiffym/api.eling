@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\Student\DashboardController;
 use App\Http\Controllers\Api\Student\NotificationController as StudentNotificationController;
+use App\Http\Controllers\Api\Student\StudentClassContentController;
+use App\Http\Controllers\Api\Student\StudentClassController;
+use App\Http\Controllers\Api\Student\SubmissionController;
 use App\Http\Controllers\Api\Teacher\AssignmentController;
 use App\Http\Controllers\Api\Teacher\ForumController;
 use App\Http\Controllers\Api\Teacher\MaterialController;
@@ -76,10 +79,18 @@ Route::middleware('auth:api')->group(fn () => [
     Route::middleware('auth:api', 'scope:student')->prefix('student')->group(fn () => [
         // Dashboard
         Route::controller(DashboardController::class)->group(fn () => [
-            Route::get('my-classes', 'MyOnlineClasses'),
+            // Route::get('my-classes', 'MyOnlineClasses'),
             Route::get('upcoming-assignments', 'UpcomingAssignments'),
             Route::get('random-motivational-word', 'RandomMotivationalWord'),
         ]),
+        // Student's Class
+        Route::apiResource('my-classes', StudentClassController::class)->only(['index', 'show']),
+        Route::scopeBindings()->group(fn () => [
+            Route::apiResource('my-classes.contents', StudentClassContentController::class)->only(['index', 'show']),
+        ]),
+        // Student's Submission
+        Route::apiResource('submissions', SubmissionController::class)->only(['show', 'update']),
+
         // Notifications
         Route::controller(StudentNotificationController::class)->group(fn () => [
             Route::get('notifications/read', 'read'),
@@ -87,11 +98,6 @@ Route::middleware('auth:api')->group(fn () => [
             Route::patch('notifications/unread', 'markAllAsRead'),
             Route::get('notifications', 'index'),
             Route::get('notifications/{id}', 'show'),
-        ])
-        // Detail Online Class
-        // Submission
+        ]),
     ]),
-
-    // Role Family
-    Route::middleware('auth:api', 'scope:family')->prefix('family')->group(fn () => []),
 ]);

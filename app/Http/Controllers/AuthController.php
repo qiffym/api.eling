@@ -46,15 +46,9 @@ class AuthController extends Controller
         if ($user->hasRole('teacher')) {
             $token = $user->createToken('Eling', ['teacher'])->accessToken;
         }
-        if ($user->hasRole('family')) {
-            $token = $user->createToken('Eling', ['family'])->accessToken;
-        }
         if ($user->hasRole('student')) {
             $token = $user->createToken('Eling', ['student'])->accessToken;
         }
-
-        // $token = $user->createToken('Token Name')->accessToken;
-
         return $this->okResponse('You have successfully logged in', ['user' => new AuthResource($user), 'token' => $token]);
     }
 }

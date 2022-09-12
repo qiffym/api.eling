@@ -41,17 +41,17 @@ class UserSeeder extends Seeder
         $teacher->assignRole('teacher');
         Teacher::create(['user_id' => $teacher->id]);
 
-        // ortu
-        $family = User::create([
-            'name' => 'Orang tua A',
-            'username' => 'ortua',
-            'email' => 'ortua@email.com',
-            'email_verified_at' => now(),
-            'password' => '12345',
-            'remember_token' => Str::random(10),
-        ]);
-        $family->assignRole('family');
-        Family::create(['user_id' => $family->id]);
+        // // ortu
+        // $family = User::create([
+        //     'name' => 'Orang tua A',
+        //     'username' => 'ortua',
+        //     'email' => 'ortua@email.com',
+        //     'email_verified_at' => now(),
+        //     'password' => '12345',
+        //     'remember_token' => Str::random(10),
+        // ]);
+        // $family->assignRole('family');
+        // Family::create(['user_id' => $family->id]);
 
         // siswa
         $student = User::create([
@@ -63,6 +63,42 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         $student->assignRole('student');
-        Student::create(['user_id' => $student->id, 'family_id' => 1, 'rombel_class_id' => 1]);
+        Student::create(['user_id' => $student->id, 'rombel_class_id' => 1]);
+
+        // siswa 2
+        $student2 = User::create([
+            'name' => 'Siswa B',
+            'username' => 'siswab',
+            'email' => 'siswab@email.com',
+            'email_verified_at' => now(),
+            'password' => '12345',
+            'remember_token' => Str::random(10),
+        ]);
+        $student2->assignRole('student');
+        Student::create(['user_id' => $student2->id, 'rombel_class_id' => 1]);
+
+        // siswa 3
+        $student3 = User::create([
+            'name' => 'Siswa C',
+            'username' => 'siswac',
+            'email' => 'siswac@email.com',
+            'email_verified_at' => now(),
+            'password' => '12345',
+            'remember_token' => Str::random(10),
+        ]);
+        $student3->assignRole('student');
+        Student::create(['user_id' => $student3->id, 'rombel_class_id' => 1]);
+
+        // siswa 4
+        $student4 = User::create([
+            'name' => 'Siswa D',
+            'username' => 'siswad',
+            'email' => 'siswad@email.com',
+            'email_verified_at' => now(),
+            'password' => '12345',
+            'remember_token' => Str::random(10),
+        ]);
+        $student4->assignRole('student');
+        Student::create(['user_id' => $student4->id, 'rombel_class_id' => 2]);
     }
 }

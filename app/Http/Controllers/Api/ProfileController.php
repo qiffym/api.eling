@@ -5,14 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\Users\DetailUserResource;
-use App\Models\Student;
-use App\Models\Teacher;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -60,11 +55,11 @@ class ProfileController extends Controller
             ]);
 
             // update spesific role
-            if ($user->hasRole(3)) { // teacher
+            if ($user->hasRole('teacher')) { // teacher
                 $user->teacher()->updateOrCreate(['user_id' => $user->id], ['nip' => $request->nip, 'nik' => $request->nik]);
             }
 
-            if ($user->hasRole(5)) { // student
+            if ($user->hasRole('student')) { // student
                 $user->student()->updateOrCreate(['user_id' => $user->id], ['nis' => $request->nis, 'nisn' => $request->nisn]);
             }
 
