@@ -5,7 +5,7 @@ namespace App\Http\Resources\OnlineClasses;
 use App\Http\Resources\CommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DiscussionForumResource extends JsonResource
+class ForumResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,14 +15,12 @@ class DiscussionForumResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             'id' => $this->id,
             'content_id' => $this->content->id,
             'content_of' => $this->content->title,
             'topic' => $this->title,
-            'description' => $this->description,
-            'comments' => $this->whenLoaded('comments', CommentResource::collection($this->comments)),
+            'created_at' => $this->created_at->diffForHumans(),
         ];
     }
 }

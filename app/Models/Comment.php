@@ -23,7 +23,7 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function sub_comments(): HasMany
+    public function subComments(): HasMany
     {
         return $this->hasMany(SubComment::class);
     }

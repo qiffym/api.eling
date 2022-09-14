@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\OnlineClasses;
+namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AssignmentResource extends JsonResource
+class SubCommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +16,10 @@ class AssignmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'deadline' => Carbon::parse($this->deadline)->diffForHumans(),
+            'avatar' => $this->author->avatar ? asset('storage/' . $this->author->avatar) : $this->author->gravatar(),
+            'author' => $this->author->name,
+            'comment' => $this->comment,
+            'edited' => ($this->edited == 1) ? true : false,
             'created_at' => $this->created_at->diffForHumans(),
         ];
     }

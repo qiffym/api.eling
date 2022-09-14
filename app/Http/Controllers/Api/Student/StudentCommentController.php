@@ -1,23 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\DiscussionForum;
 use App\Models\OnlineClass;
 use App\Models\OnlineClassContent;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
+class StudentCommentController extends Controller
 {
-    public function index(OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum)
-    {
-        $comments = $forum->comments;
-        return $this->okResponse('Comments retirieved successfully.', CommentResource::collection($comments));
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -25,7 +18,7 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum)
+    public function store(Request $request, OnlineClass $my_class, OnlineClassContent $content, DiscussionForum $forum)
     {
         try {
             $request->validate([
@@ -44,16 +37,6 @@ class CommentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -62,7 +45,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
+    public function update(Request $request, OnlineClass $my_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
     {
         abort_if($comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 
@@ -86,7 +69,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
+    public function destroy(OnlineClass $my_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
     {
         abort_if($comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 

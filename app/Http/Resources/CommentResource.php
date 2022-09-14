@@ -18,10 +18,12 @@ class CommentResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
+            'avatar' => $this->author->avatar ? asset('storage/' . $this->author->avatar) : $this->author->gravatar(),
             'author' => $this->author->name,
             'comment' => $this->comment,
             'edited' => ($this->edited == 1) ? true : false,
             'created_at' => $this->created_at->diffForHumans(),
+            'sub_comments' => SubCommentResource::collection($this->subComments)
         ];
     }
 }

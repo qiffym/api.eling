@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Submissions\SubmissionRecource;
-use App\Models\OnlineClass;
-use App\Models\OnlineClassContent;
-use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

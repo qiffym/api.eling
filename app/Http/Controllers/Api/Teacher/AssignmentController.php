@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OnlineClasses\AssignmentResource;
+use App\Http\Resources\OnlineClasses\DetailAssignmentResource;
 use App\Models\Assignment;
 use App\Models\OnlineClass;
 use App\Models\OnlineClassContent;
@@ -19,13 +20,9 @@ class AssignmentController extends Controller
     public function index(OnlineClass $online_class, OnlineClassContent $content)
     {
         $assignments = Assignment::whereBelongsTo($content, 'content')->get();
-        $data = collect($assignments)->map(fn ($assignment) => [
-            'id' => $assignment->id,
-            'title' => $assignment->title,
-            'created_at' => $assignment->created_at->diffForHumans()
-        ]);
 
-        return $this->successResponse("Assignments from $content->title retrieved successfully", $data);
+
+        return $this->successResponse("Assignments from $content->title retrieved successfully", AssignmentResource::collection($assignments));
     }
 
 
@@ -69,7 +66,7 @@ class AssignmentController extends Controller
 
     public function show(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
     {
-        return $this->successResponse('Detail assignment retrieved successfully', new AssignmentResource($assignment));
+        return $this->successResponse('Detail assignment retrieved successfully', new DetailAssignmentResource($assignment));
     }
 
 
@@ -123,7 +120,7 @@ class AssignmentController extends Controller
 
     public function unGrading(OnlineClass $online_class, OnlineClassContent $content, Assignment $assignment)
     {
-        $query = $assignment->students()->wherePivot('status_id', 2)->get();
+        $query = $assignment->students()->wherePivot('submitted_at', '!=', null)->wherePivotNull('score')->get();
         return $this->okResponse('Ungrading retireved', $query);
     }
 
@@ -133,5 +130,9 @@ class AssignmentController extends Controller
             'student_id' => 'required|exists:students,id',
             'score' => 'required|max:100',
         ]);
+
+        ## Grade
+        $assignment->students()->updateExistingPivot($request->student_id, ['score' => $request->score]);
+        return $this->acceptedResponse('Tugas berhasil dinilai.');
     }
 }
