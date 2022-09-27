@@ -27,6 +27,7 @@ class OnlineClassController extends Controller
             'description' => $oc->desc,
             'class' => $oc->rombel_class->name,
             'teacher_id' => $oc->teacher_id,
+            'teacher_avatar' => $oc->teacher->user->avatar ? asset('storage/' . $oc->teacher->user->avatar) : $oc->teacher->user->gravatar,
             'teacher_name' => $oc->teacher->user->name,
             'created_at' => $oc->created_at->isoFormat('dddd, D MMMM Y'),
             'updated_at' => $oc->updated_at->diffForHumans(),
@@ -51,7 +52,7 @@ class OnlineClassController extends Controller
             ]);
 
             // add new online class
-            $new = OnlineClass::create([
+            $oc = OnlineClass::create([
                 'teacher_id' => $request->user()->teacher->id,
                 'name' => $request->name,
                 'desc' => $request->description,
@@ -62,8 +63,7 @@ class OnlineClassController extends Controller
 
             // enroll student from rombel_class
             if (!is_null($rombel->students)) {
-                $oc = OnlineClass::find($new->id);
-                $oc->students()->sync($rombel->students->pluck('id'));
+                $oc->students()->sync($rombel->students()->get());
             }
 
             return $this->acceptedResponse("New online class created successfully for class $rombel->name students");

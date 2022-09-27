@@ -35,24 +35,29 @@ class UpdateProfileRequest extends FormRequest
             'telpon' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             // if teacher
             'nik' => [
-                Rule::requiredIf($this->user->hasRole(3)),
-                Rule::prohibitedIf(!$this->user->hasRole(3)),
+                Rule::requiredIf($this->user->hasRole('teacher')),
+                Rule::prohibitedIf(!$this->user->hasRole('teacher')),
                 'digits:16'
             ],
             'nip' => [
-                Rule::prohibitedIf(!$this->user->hasRole(3)),
+                Rule::prohibitedIf(!$this->user->hasRole('teacher')),
                 'nullable', 'digits:18'
             ],
 
             // if student
             'nis' => [
-                Rule::requiredIf($this->user->hasRole(5)),
-                Rule::prohibitedIf(!$this->user->hasRole(5)),
+                Rule::requiredIf($this->user->hasRole('student')),
+                Rule::prohibitedIf(!$this->user->hasRole('student')),
                 'regex:/^[0-9]+$/'
             ],
             'nisn' => [
-                Rule::prohibitedIf(!$this->user->hasRole(5)),
+                Rule::prohibitedIf(!$this->user->hasRole('student')),
                 'nullable', 'digits:10'
+            ],
+            'rombel' => [
+                Rule::requiredIf($this->user->hasRole('student')),
+                Rule::prohibitedIf(!$this->user->hasRole('student')),
+                'exists:rombel_classes,id'
             ],
         ];
     }

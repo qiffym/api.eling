@@ -21,7 +21,7 @@ class StudentClassController extends Controller
     public function show($id)
     {
         $student = Auth::user()->student;
-        $myClass = $student->online_classes()->whereId($id)->first();
+        $myClass = $student->online_classes()->whereId($id)->firstOrFail();
         return $this->successResponse('Detail class retrieved successfully', new DetailOnlineClassResource($myClass));
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -23,8 +24,8 @@ class UserController extends Controller
     public function index()
     {
         $this->checkTokenAbility();
-
-        $users = User::latest()->paginate(20);
+        $user_id = auth()->user()->id;
+        $users = User::where('id', '!=', $user_id)->latest()->paginate(20);
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users));
     }
@@ -45,7 +46,7 @@ class UserController extends Controller
                 'role' => 'required|in:1,2,3',
                 'gender' => 'in:L,P',
                 'username' => 'required|unique:users,username|string|min:3',
-                'email' => 'email',
+                'email' => 'email|unique:users,email',
                 'password' => 'required|string|min:5',
             ]);
             $validatedData = Arr::except($input, 'role');
@@ -59,7 +60,7 @@ class UserController extends Controller
 
             return $this->createdResponse('User has been created successfully');
         } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json(['message' => $th->getMessage()], 422);
         }
     }
 

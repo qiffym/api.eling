@@ -80,9 +80,9 @@ class SubmissionController extends Controller
             }
 
             $submissions->updateExistingPivot($id, ['file' => $path, 'status_id' => 2, 'submitted_at' => now()]);
-            return $this->okResponse('Upload success.');
+            return $this->okResponse('Tugas berhasil dikumpulkan.');
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => $th->getMessage()]);
+            return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
     }
 

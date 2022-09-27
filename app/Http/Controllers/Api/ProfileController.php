@@ -60,7 +60,7 @@ class ProfileController extends Controller
             }
 
             if ($user->hasRole('student')) { // student
-                $user->student()->updateOrCreate(['user_id' => $user->id], ['nis' => $request->nis, 'nisn' => $request->nisn]);
+                $user->student()->updateOrCreate(['user_id' => $user->id], ['nis' => $request->nis, 'nisn' => $request->nisn, 'rombel_class_id' => $request->rombel]);
             }
 
             return $this->successResponse('Your profile has been updated successfully');
