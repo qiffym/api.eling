@@ -17,16 +17,19 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('username')->unique()->nullable();
-            $table->string('email')->unique();
+            $table->string('username')->unique();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->enum('gender', ['L', 'P'])->nullable();
             $table->string('avatar')->nullable();
-            $table->dateTime('birthday')->nullable();
-            $table->string('religion')->nullable();
+            $table->date('birthday')->nullable();
+            $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])->nullable();
             $table->string('address')->nullable();
+            $table->string('telpon', '15')->nullable();
+            $table->boolean('status')->default(true);
+            $table->timestamp('last_login')->nullable();
 
             $table->timestamps();
         });
