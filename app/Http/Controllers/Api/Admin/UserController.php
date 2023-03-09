@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Users\DetailUserResource;
 use App\Http\Resources\Users\UserResource;
-use App\Models\Family;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -25,7 +23,7 @@ class UserController extends Controller
     {
         $this->checkTokenAbility();
         $user_id = auth()->user()->id;
-        $users = User::where('id', '!=', $user_id)->latest()->paginate(20);
+        $users = User::where('id', '!=', $user_id)->latest()->filter(request(['search']))->paginate();
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users));
     }
@@ -48,7 +46,12 @@ class UserController extends Controller
                 'username' => 'required|unique:users,username|string|min:3',
                 'email' => 'email|unique:users,email',
                 'password' => 'required|string|min:5',
+                // role == student
+                'rombel_class_id' => 'required_if:role,3|exists:rombel_classes,id',
             ]);
+
+
+
             $validatedData = Arr::except($input, 'role');
 
             //# create user
@@ -56,7 +59,11 @@ class UserController extends Controller
             //# assign role
             User::find($user->id)->assignRole($input['role']);
             //# create specific role
-            $this->attachSpecificRole($input['role'], $user->id);
+            if ($input['role'] === 3) { // if student
+                $this->attachSpecificRole($input['role'], $user->id, $input['rombel_class_id']);
+            } else { // selain student
+                $this->attachSpecificRole($input['role'], $user->id);
+            }
 
             return $this->createdResponse('User has been created successfully');
         } catch (\Throwable $th) {
@@ -93,19 +100,19 @@ class UserController extends Controller
         $this->checkTokenAbility();
         try {
             $request->validate([
-                'name' => 'required|string',
-                'role' => 'required|in:1,2,3',
-                'username' => 'required|string|min:3|unique:users,username,' . $id,
+                'name' => 'nullable|string',
+                // 'role' => 'nullable|in:1,2,3',
+                'username' => 'nullable|string|min:3|unique:users,username,' . $id,
                 'email' => 'nullable|email:rfc,dns|unique:users,email,' . $id,
                 'gender' => 'in:L,P|nullable',
                 'birthday' => 'date|nullable',
                 'religion' => 'in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu|nullable',
                 'address' => 'string|nullable',
-                'telpon' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:10|nullable',
-                'status' => 'required|bool',
-                'password' => 'current_password|nullable',
+                'telpon' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:13|nullable',
+                'status' => 'nullable|bool',
+                'password' => 'string|min:5|nullable|current_password',
                 'new_password' => 'required_with:password|confirmed',
-            ]);
+            ], ['telpon.regex' => 'Telpon value must be number, min: 10 digits, max:13 digits']);
 
             $user = User::where('id', $id);
             $currentRole = $user->first()->roles()->first()->id;
@@ -123,19 +130,23 @@ class UserController extends Controller
                 'status' => $request->status ?? 1,
             ]);
 
+            $request->user()->where('id', $id);
+            $request->user();
+
             //# update password
             if ($request->pasword) {
                 $user->update([
-                    'password' => $request->new_password,
+                    'password' => bcrypt($request->new_password),
                 ]);
+                $user->tokens()->delete();
             }
-            //# sync specific role
-            if ($currentRole != $request->role) {
-                $this->detachSpecificRole($currentRole, $user->first()->id);
-                $this->attachSpecificRole($request->role, $user->first()->id);
-            }
-            //# sync role
-            $user->first()->syncRoles($request->role);
+            // //# sync specific role
+            // if ($currentRole != $request->role) {
+            //     $this->detachSpecificRole($currentRole, $user->first()->id);
+            //     $this->attachSpecificRole($request->role, $user->first()->id);
+            // }
+            // //# sync role
+            // $user->first()->syncRoles($request->role);
 
             return $this->successResponse('User has been updated successfully');
         } catch (\Throwable $th) {
@@ -173,14 +184,14 @@ class UserController extends Controller
         }
     }
 
-    public function attachSpecificRole($role, $user_id)
+    public function attachSpecificRole($role, $user_id, $rombel_class_id = null)
     {
         if ($role == 2) { // teacher
             Teacher::create(['user_id' => $user_id]);
         }
 
         if ($role == 3) { // student
-            Student::create(['user_id' => $user_id]);
+            Student::create(['user_id' => $user_id, 'rombel_class_id' => $rombel_class_id]);
         }
     }
 

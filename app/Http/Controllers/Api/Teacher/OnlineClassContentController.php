@@ -30,7 +30,7 @@ class OnlineClassContentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'All contents retrieved successfully',
-            'online_class_name' => "$online_class->name (" . $online_class->rombel_class->name . ')',
+            'online_class_name' => "$online_class->name (".$online_class->rombel_class->name.')',
             'data' => $data,
         ], 200);
     }
@@ -116,6 +116,7 @@ class OnlineClassContentController extends Controller
         }
 
         $content->delete();
+
         return $this->okResponse('Content deleted successfully');
     }
 }

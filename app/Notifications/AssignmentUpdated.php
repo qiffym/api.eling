@@ -3,12 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class AssignmentUpdated extends Notification
 {
     use Queueable;
+
     private $data;
 
     /**
@@ -42,7 +42,7 @@ class AssignmentUpdated extends Notification
     {
         return [
             'message' => $this->data['message'],
-            'details' => $this->data['details']
+            'details' => $this->data['details'],
         ];
     }
 }

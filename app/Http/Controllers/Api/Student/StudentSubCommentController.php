@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class StudentSubCommentController extends Controller
 {
-
     /**
      * Store a newly created resource in storage.
      *
@@ -22,7 +21,7 @@ class StudentSubCommentController extends Controller
     public function store(Request $request, OnlineClass $my_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
     {
         $request->validate([
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         SubComment::create([
@@ -46,12 +45,13 @@ class StudentSubCommentController extends Controller
         abort_if($sub_comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 
         $request->validate([
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         $sub_comment->comment = $request->comment;
         $sub_comment->edited = true;
         $sub_comment->save();
+
         return $this->acceptedResponse('Sub comment updated successfully');
     }
 
@@ -65,6 +65,7 @@ class StudentSubCommentController extends Controller
     {
         abort_if($sub_comment->user_id != auth()->user()->id, 403, 'Forbidden.');
         $sub_comment->delete();
+
         return $this->successResponse('Your sub comment deleted successfully');
     }
 }

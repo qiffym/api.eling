@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\MotivationalWordController;
 use App\Http\Controllers\Api\Admin\RombelClassController;
 use App\Http\Controllers\Api\Admin\UserController;
-use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Student\DashboardController;
 use App\Http\Controllers\Api\Student\NotificationController as StudentNotificationController;
 use App\Http\Controllers\Api\Student\StudentClassContentController;
@@ -53,17 +54,23 @@ Route::middleware('auth:api')->group(fn () => [
     Route::controller(ProfileController::class)->group(fn () => [
         Route::patch('profile/update-password', 'updatePassword'),
         Route::patch('profile/update-avatar', 'updateAvatar'),
-        Route::match(['put', 'patch'], 'profile/{user}', 'update'),
+        Route::match(['put', 'patch'], 'profile', 'update'),
         Route::get('profile/{user}', 'show'),
     ]),
+
+    // GET Rombel Class
+    Route::get('/rombel-classes', [RombelClassController::class, 'index']),
 
     //* Route for Specific Role
     // Role Admin
     Route::middleware('auth:api', 'scope:admin')->prefix('admin')->group(fn () => [
+        Route::controller(AdminDashboardController::class)->group(fn () => [
+            Route::get('dashboard/users', 'users'),
+        ]),
         Route::apiResources([
             'resources/users' => UserController::class,
             'resources/rombel-classes' => RombelClassController::class,
-            'resources/motivational-words' => MotivationalWordController::class
+            'resources/motivational-words' => MotivationalWordController::class,
         ]),
     ]),
 
@@ -73,8 +80,9 @@ Route::middleware('auth:api')->group(fn () => [
         Route::scopeBindings()->group(fn () => [
             Route::apiResource('online-classes.contents', OnlineClassContentController::class),
             //* Grading Routes
-            Route::get('online-classes/{online_class}/contents/{content}/assignments/{assignment}/ungrading', [AssignmentController::class, 'unGrading']),
             Route::get('online-classes/{online_class}/contents/{content}/assignments/{assignment}/unsubmitted', [AssignmentController::class, 'unSubmitted']),
+            Route::get('online-classes/{online_class}/contents/{content}/assignments/{assignment}/ungrading', [AssignmentController::class, 'unGrading']),
+            Route::get('online-classes/{online_class}/contents/{content}/assignments/{assignment}/graded', [AssignmentController::class, 'graded']),
             Route::post('online-classes/{online_class}/contents/{content}/assignments/{assignment}/grade', [AssignmentController::class, 'grade']),
             //* End's Grading Routes
             Route::apiResource('online-classes.contents.assignments', AssignmentController::class),

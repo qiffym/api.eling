@@ -16,6 +16,7 @@ class SubmissionStatus extends Model
      * @var string
      */
     protected $table = 'submission_status';
+
     protected $guarded = ['id'];
 
     public function submission(): HasMany

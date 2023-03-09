@@ -18,9 +18,8 @@ class AuthController extends Controller
         $credType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         if (!Auth::guard('web')->attempt([$credType => $creds['username'], 'password' => $creds['password']])) {
-            return $this->unauthenticatedResponse('The provided credentials do not match our records.');
+            return $this->unauthenticatedResponse('The username or password incorrect.');
         }
-
 
         return $this->response(Auth::user());
     }
@@ -49,6 +48,7 @@ class AuthController extends Controller
         if ($user->hasRole('student')) {
             $token = $user->createToken('Eling', ['student'])->accessToken;
         }
+
         return $this->okResponse('You have successfully logged in', ['user' => new AuthResource($user), 'token' => $token]);
     }
 }

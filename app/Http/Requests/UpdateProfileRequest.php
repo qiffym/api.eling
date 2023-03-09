@@ -37,27 +37,27 @@ class UpdateProfileRequest extends FormRequest
             'nik' => [
                 Rule::requiredIf($this->user->hasRole('teacher')),
                 Rule::prohibitedIf(!$this->user->hasRole('teacher')),
-                'digits:16'
+                'digits:16',
             ],
             'nip' => [
                 Rule::prohibitedIf(!$this->user->hasRole('teacher')),
-                'nullable', 'digits:18'
+                'nullable', 'digits:18',
             ],
 
             // if student
             'nis' => [
-                Rule::requiredIf($this->user->hasRole('student')),
+                // Rule::requiredIf($this->user->hasRole('student')),
                 Rule::prohibitedIf(!$this->user->hasRole('student')),
-                'regex:/^[0-9]+$/'
+                'regex:/^[0-9]+$/',
             ],
             'nisn' => [
                 Rule::prohibitedIf(!$this->user->hasRole('student')),
-                'nullable', 'digits:10'
+                'nullable', 'digits:10',
             ],
             'rombel' => [
                 Rule::requiredIf($this->user->hasRole('student')),
                 Rule::prohibitedIf(!$this->user->hasRole('student')),
-                'exists:rombel_classes,id'
+                'exists:rombel_classes,id',
             ],
         ];
     }

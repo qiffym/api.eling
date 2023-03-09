@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\OnlineClasses;
 
-use App\Models\StudentAssignment;
 use App\Models\Submission;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,6 +21,7 @@ class StudentResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->user->name,
+            'avatar' => $this->user->avatar ? asset('storage/'.$this->user->avatar) : $this->user->gravatar(),
             'username' => $this->user->username,
             'email' => $this->user->email,
             'nis' => $this->nis,
@@ -33,7 +33,7 @@ class StudentResource extends JsonResource
                 'file' => $this->pivot->file ? Storage::url($this->pivot->file) : 'Tidak ada.',
                 'submitted_at' => $this->pivot->submitted_at ? Carbon::parse($this->pivot->submitted_at)->diffForHumans() : 'Belum mengumpulkan.',
                 'score' => $this->pivot->score ?? '--',
-            ])
+            ]),
         ];
     }
 }

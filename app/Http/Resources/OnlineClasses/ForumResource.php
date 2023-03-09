@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\OnlineClasses;
 
-use App\Http\Resources\CommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ForumResource extends JsonResource

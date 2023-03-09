@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OnlineClasses\ContentResource;
 use App\Models\OnlineClass;
 use App\Models\OnlineClassContent;
-use Illuminate\Http\Request;
 
 class StudentClassContentController extends Controller
 {
@@ -28,7 +27,7 @@ class StudentClassContentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'All contents retrieved successfully',
-            'online_class_name' => "$my_class->name (" . $my_class->rombel_class->name . ')',
+            'online_class_name' => "$my_class->name (".$my_class->rombel_class->name.')',
             'data' => $data,
         ], 200);
     }

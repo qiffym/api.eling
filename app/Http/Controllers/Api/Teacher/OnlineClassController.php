@@ -27,7 +27,7 @@ class OnlineClassController extends Controller
             'description' => $oc->desc,
             'class' => $oc->rombel_class->name,
             'teacher_id' => $oc->teacher_id,
-            'teacher_avatar' => $oc->teacher->user->avatar ? asset('storage/' . $oc->teacher->user->avatar) : $oc->teacher->user->gravatar,
+            'teacher_avatar' => $oc->teacher->user->avatar ? asset('storage/'.$oc->teacher->user->avatar) : $oc->teacher->user->gravatar(),
             'teacher_name' => $oc->teacher->user->name,
             'created_at' => $oc->created_at->isoFormat('dddd, D MMMM Y'),
             'updated_at' => $oc->updated_at->diffForHumans(),
@@ -62,7 +62,7 @@ class OnlineClassController extends Controller
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (!is_null($rombel->students)) {
+            if (! is_null($rombel->students)) {
                 $oc->students()->sync($rombel->students()->get());
             }
 
@@ -82,7 +82,7 @@ class OnlineClassController extends Controller
     {
         try {
             $oc = OnlineClass::where('teacher_id', auth()->user()->teacher->id)->where('id', $id)->first();
-            $message = "Detail online class named $oc->name for " . $oc->rombel_class->name . ' retrieved successfully';
+            $message = "Detail online class named $oc->name for ".$oc->rombel_class->name.' retrieved successfully';
 
             return $this->okResponse($message, new DetailOnlineClassResource($oc));
         } catch (\Throwable $th) {
@@ -117,7 +117,7 @@ class OnlineClassController extends Controller
             $rombel = RombelClass::find($request->rombel_class_id);
 
             // enroll student from rombel_class
-            if (!is_null($rombel->students)) {
+            if (! is_null($rombel->students)) {
                 $oc = OnlineClass::find($new->id);
                 $oc->students()->sync($rombel->students->pluck('id'));
             }

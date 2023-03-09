@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\RombelClasses;
 
-use App\Http\Resources\StudentResource;
+use App\Http\Resources\Users\StudentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DetailRombelClassResource extends JsonResource

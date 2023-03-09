@@ -8,8 +8,6 @@ use App\Http\Resources\OnlineClasses\OnlineClassResource;
 use App\Http\Resources\Users\Student\UpcomingAssignment;
 use App\Models\MotivationalWord;
 use App\Models\Student;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -19,7 +17,8 @@ class DashboardController extends Controller
 
         // TODO: Ambil semua online class dari siswa
         $myClasses = $student->online_classes;
-        return $this->successResponse("Online class " . $student->user->name . " retrieved successfully", OnlineClassResource::collection($myClasses));
+
+        return $this->successResponse('Online class '.$student->user->name.' retrieved successfully', OnlineClassResource::collection($myClasses));
     }
 
     public function UpcomingAssignments()
@@ -31,9 +30,9 @@ class DashboardController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Upcoming assignment from " . $student->user->name . " retrieved successfully",
+            'message' => 'Upcoming assignment from '.$student->user->name.' retrieved successfully',
             'total' => $upcoming_assignments->count(),
-            'data' => UpcomingAssignment::collection($upcoming_assignments)
+            'data' => UpcomingAssignment::collection($upcoming_assignments),
         ]);
     }
 
@@ -41,9 +40,10 @@ class DashboardController extends Controller
     {
         $word = MotivationalWord::inRandomOrder()->first();
 
-        if (!$word) {
+        if (! $word) {
             return $this->okResponse('Data masih kosong.');
         }
+
         return $this->successResponse('Random motivational word retrieved successfully', new MotivationalWordResource($word));
     }
 }

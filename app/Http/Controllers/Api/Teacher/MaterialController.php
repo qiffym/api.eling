@@ -24,9 +24,12 @@ class MaterialController extends Controller
             'id' => $material->id,
             'title' => $material->title,
             'file' => Storage::url($material->file),
+            'extension' => $this->file->extension(),
+            'extension_2' => Storage::extension($this->file),
             'created_at' => $material->created_at->diffForHumans(),
         ]);
-        return $this->successResponse("All materials from $content->title of $online_class->name (" . $online_class->rombel_class->name . ") retrieved successfully", $data);
+
+        return $this->successResponse("All materials from $content->title of $online_class->name (" . $online_class->rombel_class->name . ') retrieved successfully', $data);
     }
 
     /**
@@ -55,7 +58,7 @@ class MaterialController extends Controller
             Material::create([
                 'online_class_content_id' => $content->id,
                 'title' => $request->title,
-                'file' => $path
+                'file' => $path,
             ]);
 
             return $this->acceptedResponse('New material created successfully');
@@ -72,7 +75,6 @@ class MaterialController extends Controller
      */
     public function show(OnlineClass $online_class, OnlineClassContent $content, Material $material)
     {
-
         return $this->okResponse('Materi retrieved sucessfully', new MaterialResource($material));
     }
 
@@ -85,7 +87,6 @@ class MaterialController extends Controller
      */
     public function update(Request $request, OnlineClass $online_class, OnlineClassContent $content, Material $material)
     {
-
         $request->validate([
             'title' => 'required|string',
             'file' => 'nullable|file',
@@ -122,6 +123,7 @@ class MaterialController extends Controller
         }
 
         $material->delete();
+
         return $this->successResponse('Material deleted successfully');
     }
 }

@@ -22,6 +22,7 @@ class DiscussionForumResource extends JsonResource
             'content_of' => $this->content->title,
             'topic' => $this->title,
             'description' => $this->description,
+            'total_comment' => $this->comments->count(),
             'comments' => $this->whenLoaded('comments', CommentResource::collection($this->comments)),
         ];
     }

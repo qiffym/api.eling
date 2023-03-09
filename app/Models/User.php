@@ -54,6 +54,16 @@ class User extends Authenticatable
 
     protected $guard_name = 'web';
 
+    // ScopeFilter
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, function ($query, $seach) {
+            return $query->where('name', 'like', '%' . $seach . '%')
+                ->orWhere('username', 'like', '%' . $seach . '%')
+                ->orWhere('email', 'like', '%' . $seach . '%');
+        });
+    }
+
     //# Accessors & Mutators
     public function setPasswordAttribute($password)
     {
@@ -62,7 +72,7 @@ class User extends Authenticatable
 
     public function gravatar($size = 150)
     {
-        return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=mm&s=' . $size;
+        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?d=mm&s='.$size;
     }
 
     //# Eloquent Relationship

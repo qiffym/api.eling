@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\Users\DetailUserResource;
+use App\Models\RombelClass;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,8 +37,9 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProfileRequest $request, User $user)
+    public function update(UpdateProfileRequest $request)
     {
+        $user = auth()->user()->id;
 
         try {
             $request->validated();
@@ -61,6 +63,9 @@ class ProfileController extends Controller
 
             if ($user->hasRole('student')) { // student
                 $user->student()->updateOrCreate(['user_id' => $user->id], ['nis' => $request->nis, 'nisn' => $request->nisn, 'rombel_class_id' => $request->rombel]);
+                $rombel = RombelClass::find($request->rombel);
+                $user->student->online_classes()->sync($rombel->online_classes()->get());
+                $user->student->assignments()->sync($rombel->online_classes->contents->pluck('id'));
             }
 
             return $this->successResponse('Your profile has been updated successfully');

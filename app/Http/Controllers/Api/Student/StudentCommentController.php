@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class StudentCommentController extends Controller
 {
-
     /**
      * Store a newly created resource in storage.
      *
@@ -22,7 +21,7 @@ class StudentCommentController extends Controller
     {
         try {
             $request->validate([
-                'comment' => 'required'
+                'comment' => 'required',
             ]);
 
             Comment::create([
@@ -37,7 +36,6 @@ class StudentCommentController extends Controller
         }
     }
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -51,12 +49,13 @@ class StudentCommentController extends Controller
 
         try {
             $request->validate([
-                'comment' => 'required'
+                'comment' => 'required',
             ]);
 
             $comment->comment = $request->comment;
             $comment->edited = true;
             $comment->save();
+
             return $this->acceptedResponse('Comment updated successfully');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
@@ -74,6 +73,7 @@ class StudentCommentController extends Controller
         abort_if($comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 
         $comment->delete();
+
         return $this->successResponse('Your comment deleted successfully');
     }
 }

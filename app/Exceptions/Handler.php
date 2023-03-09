@@ -5,7 +5,6 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -49,7 +48,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Record not found.'
+                    'message' => 'Record not found.',
                 ], 404);
             }
         });
@@ -58,7 +57,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Forbidden.'
+                    'message' => 'Forbidden.',
                 ], 403);
             }
         });

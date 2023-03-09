@@ -37,10 +37,14 @@ class SubmissionController extends Controller
      */
     public function show($id)
     {
-
         $student = Auth::user()->student;
-        $submission = $student->assignments()->where('assignment_id', $id)->first();
-        return $this->successResponse("Submission detail retrieved successfully", new SubmissionRecource($submission));
+        $assignmentDetail = $student->assignments()->where('assignment_id', $id)->first();
+
+        if (!$assignmentDetail) {
+            return $this->notFoundResponse('Tugas ini tidak tersedia untukmu, silahkan lapor ke guru pengajar');
+        }
+
+        return $this->successResponse('Submission detail retrieved successfully', new SubmissionRecource($assignmentDetail));
     }
 
     /**
@@ -54,11 +58,11 @@ class SubmissionController extends Controller
     {
         try {
             $request->validate([
-                'file' => 'required|file',
+                'file' => 'required|file|max:51200',
             ]);
 
             $student = Auth::user()->student;
-            $submissions = $student->assignments();
+            $studentAssignments = $student->assignments();
             $submission = $student->assignments()->where('assignment_id', $id)->first();
             $content = $submission->content->title;
 
@@ -68,18 +72,17 @@ class SubmissionController extends Controller
             $content_name = str($content)->camel();
             $string_path = "uploads/submissions/$rombel_name/$student_name/$oc_name/$content_name";
 
-            if ($request->hasFile('file')) {
-                $file = $request->file('file');
-                $path = $file->storeAs($string_path, str($file->getClientOriginalName())->camel());
-            }
+            // Store File
+            $file = $request->file('file');
+            $path = $file->storeAs($string_path, str($file->getClientOriginalName())->camel());
 
             $deadline = $submission->deadline;
             if ($deadline > now() == false) {
-                $submissions->updateExistingPivot($id, ['file' => $path, 'status_id' => 3, 'submitted_at' => now()]);
+                $studentAssignments->updateExistingPivot($id, ['file' => $path, 'status_id' => 3, 'submitted_at' => now()]);
                 return $this->okResponse('Mengumpulkan terlambat.');
             }
 
-            $submissions->updateExistingPivot($id, ['file' => $path, 'status_id' => 2, 'submitted_at' => now()]);
+            $studentAssignments->updateExistingPivot($id, ['file' => $path, 'status_id' => 2, 'submitted_at' => now()]);
             return $this->okResponse('Tugas berhasil dikumpulkan.');
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);

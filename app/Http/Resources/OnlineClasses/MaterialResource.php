@@ -19,8 +19,9 @@ class MaterialResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'file' => Storage::url($this->file),
+            'file_extension' => \File::extension($this->file),
             'created_at' => $this->created_at->diffForHumans(),
-            'content_of' => $this->content->title
+            'content_of' => $this->content->title,
         ];
     }
 }

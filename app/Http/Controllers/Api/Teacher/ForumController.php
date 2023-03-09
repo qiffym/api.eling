@@ -42,13 +42,13 @@ class ForumController extends Controller
         try {
             $request->validate([
                 'topic' => 'required|string',
-                'description' => 'nullable'
+                'description' => 'nullable',
             ]);
 
             DiscussionForum::create([
                 'online_class_content_id' => $content->id,
                 'title' => $request->topic,
-                'description' => $request->description
+                'description' => $request->description,
             ]);
 
             return $this->acceptedResponse('New discussion forum created successfully');
@@ -84,7 +84,7 @@ class ForumController extends Controller
         try {
             $request->validate([
                 'topic' => 'required|string',
-                'description' => 'nullable'
+                'description' => 'nullable',
             ]);
 
             $forum->title = $request->topic;
@@ -106,6 +106,7 @@ class ForumController extends Controller
     public function destroy(OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum)
     {
         $forum->delete();
+
         return $this->successResponse('Discussion Forum deleted successfully');
     }
 }

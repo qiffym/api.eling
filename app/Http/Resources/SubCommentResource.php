@@ -16,7 +16,7 @@ class SubCommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'avatar' => $this->author->avatar ? asset('storage/' . $this->author->avatar) : $this->author->gravatar(),
+            'avatar' => $this->author->avatar ? asset('storage/'.$this->author->avatar) : $this->author->gravatar(),
             'author' => $this->author->name,
             'comment' => $this->comment,
             'edited' => ($this->edited == 1) ? true : false,

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommentResource extends JsonResource
@@ -23,7 +22,8 @@ class CommentResource extends JsonResource
             'comment' => $this->comment,
             'edited' => ($this->edited == 1) ? true : false,
             'created_at' => $this->created_at->diffForHumans(),
-            'sub_comments' => SubCommentResource::collection($this->subComments)
+            'total_sub_comments' => $this->subComments->count(),
+            'sub_comments' => SubCommentResource::collection($this->subComments),
         ];
     }
 }

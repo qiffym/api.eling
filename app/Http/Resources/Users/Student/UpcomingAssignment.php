@@ -23,12 +23,12 @@ class UpcomingAssignment extends JsonResource
             'created_at' => $this->created_at->diffForHumans(),
             'content' => [
                 'id' => $this->content->id,
-                'title' => $this->content->title
+                'title' => $this->content->title,
             ],
             'online_class' => [
                 'id' => $this->content->online_class->id,
                 'name' => $this->content->online_class->name,
-            ]
+            ],
         ];
     }
 }

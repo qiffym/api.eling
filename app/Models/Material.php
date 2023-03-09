@@ -10,6 +10,7 @@ class Material extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
     protected $with = ['content'];
 
     public function content()

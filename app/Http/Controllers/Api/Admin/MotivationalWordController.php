@@ -110,7 +110,7 @@ class MotivationalWordController extends Controller
     {
         /** @var \App\Models\User $auth * */
         $auth = auth('api')->user();
-        if (!$auth->hasRole('admin')) {
+        if (! $auth->hasRole('admin')) {
             return $this->forbiddenResponse('Forbidden.');
         }
     }

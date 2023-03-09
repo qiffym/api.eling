@@ -3,13 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class AssignmentNotification extends Notification
 {
     use Queueable;
+
     private $data;
 
     /**
@@ -42,13 +42,14 @@ class AssignmentNotification extends Notification
     public function toMail($notifiable)
     {
         $firstName = str($notifiable->user->name)->words(1, '');
+
         return (new MailMessage)
             ->from('no-reply@eling.smknegeri3malang.sch.id', 'E-Learning SMK Negeri 3 Malang')
             ->subject('Tugas Baru')
-            ->greeting('Hai ' . $firstName)
+            ->greeting('Hai '.$firstName)
             ->line($this->data['message'])
-            ->line('Deadline: ' . $this->data['details']['assignment_deadline'])
-            ->action('Buka E-Learning', config('app.spa_url') . '/')
+            ->line('Deadline: '.$this->data['details']['assignment_deadline'])
+            ->action('Buka E-Learning', config('app.spa_url').'/')
             ->line('Segera dikerjakan ya tugasnya. SELAMAT BELAJAR! 😉');
     }
 
@@ -62,7 +63,7 @@ class AssignmentNotification extends Notification
     {
         return [
             'message' => $this->data['message'],
-            'details' => $this->data['details']
+            'details' => $this->data['details'],
         ];
     }
 }

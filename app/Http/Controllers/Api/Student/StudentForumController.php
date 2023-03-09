@@ -7,7 +7,6 @@ use App\Http\Resources\OnlineClasses\DiscussionForumResource;
 use App\Models\DiscussionForum;
 use App\Models\OnlineClass;
 use App\Models\OnlineClassContent;
-use Illuminate\Http\Request;
 
 class StudentForumController extends Controller
 {

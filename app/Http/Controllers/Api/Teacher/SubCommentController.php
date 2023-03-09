@@ -21,7 +21,7 @@ class SubCommentController extends Controller
     public function store(Request $request, OnlineClass $online_class, OnlineClassContent $content, DiscussionForum $forum, Comment $comment)
     {
         $request->validate([
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         SubComment::create([
@@ -45,12 +45,13 @@ class SubCommentController extends Controller
         abort_if($sub_comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 
         $request->validate([
-            'comment' => 'required'
+            'comment' => 'required',
         ]);
 
         $sub_comment->comment = $request->comment;
         $sub_comment->edited = true;
         $sub_comment->save();
+
         return $this->acceptedResponse('Sub comment updated successfully');
     }
 
@@ -65,6 +66,7 @@ class SubCommentController extends Controller
         abort_if($sub_comment->user_id != auth()->user()->id, 403, 'Forbidden.');
 
         $sub_comment->delete();
+
         return $this->successResponse('Your sub comment deleted successfully');
     }
 }
